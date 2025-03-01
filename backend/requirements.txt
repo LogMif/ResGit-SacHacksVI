@@ -1,0 +1,8 @@
+python-dotenv
+flask
+pyngrok
+flask_cors
+beautifulsoup4
+selenium
+pyPDF2
+boto3
