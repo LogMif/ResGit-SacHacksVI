@@ -4,6 +4,7 @@ import dotenv
 import os
 from flask import jsonify
 from modules import s3_io as s3
+import base64
 
 dotenv.load_dotenv()
 def _create_success_output(kwargs) -> "jsonify":
@@ -56,8 +57,16 @@ def authenticate_user(bucket, username: str, password: str) -> dict:
 
 @flask_function
 def get_past_resume_names(bucket, username: str, password: str) -> dict:
-    s3.auth_user(bucket, username, password)
-    pass
+    resume_names = s3.get_all_generated_resume_names(bucket, username, password)
+    return {"resume_names": resume_names}
+
+@flask_function
+def get_resume_pdf(bucket, username: str, password: str, resume_name: str) -> dict:
+    resume_binary = s3.get_generated_resume(bucket, username, password, resume_name)
+    
+    encoded_binary = base64.b64encode(resume_binary).decode("utf-8")
+    
+    return {"resume": encoded_binary}
 
 # @flask_function
 # def get_user_history(bucket, username: str, password: str) -> dict:
