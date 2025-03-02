@@ -88,7 +88,7 @@ def _get_education(educations: list[history_class.education]) -> str:
     
     for education in educations:
         output += f"""
-        \\item \\ressubheading{{{education.university()}}}{{{education.location()}}}{{{education.degree()}, {education.year_status()}, GPA: {education.gpa()}}}{{Expected graduation: {education.expected_graduation()}}}
+        \\item \\ressubheading{{{education.latex_university()}}}{{{education.location()}}}{{{education.degree()}, {education.year_status()}, GPA: {education.gpa()}}}{{Expected graduation: {education.expected_graduation()}}}
         """
     
     output += f"""\\end{{description}}"""
@@ -105,7 +105,7 @@ def _get_technical_skills(skills: list[history_class.skills]) -> str:
         \\itemsep0em """
     
     for skill in skills:
-        output += f"""\\resitem{{\\textbf{{{skill.skill_category()}}}}}{', '.join(skill.skills_list())}"""
+        output += f"""\\resitem{{\\textbf{{{skill.latex_skill_category()}}}}}{', '.join(skill.skills_list())}"""
 
 
     output += f"""\\end{{description}}"""
@@ -295,7 +295,8 @@ if __name__ == "__main__":
 
     history1.merge_histories(history2)
 
-    print(history1.jsonify())
+    get_resume(history1)
+    # print(history1.jsonify())
 
 
 

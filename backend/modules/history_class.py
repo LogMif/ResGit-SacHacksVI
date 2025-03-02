@@ -82,6 +82,10 @@ class education:
     def university(self) -> str:
         return self._university
     
+    def latex_university(self) -> str:
+        lst = self.university().split('!]?.')
+        return lst[-1]
+    
     def gpa(self) -> str:
         try:
             return self._gpa
@@ -110,6 +114,10 @@ class skills:
         
     def skill_category(self) -> str:
         return self._skill_category
+    
+    def latex_skill_category(self) -> str:
+        lst = self.skill_category().split('!]?.')
+        return lst[-1]
     
     def skills_list(self) -> list:
         return self._skills_list
