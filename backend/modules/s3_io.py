@@ -62,7 +62,7 @@ def get_history(bucket: str, user_name: str, password: str) -> dict[str, 'perspe
     """
     with auth_user(bucket, user_name, password) as s3_client:
         history_response = _get_object(s3_client, bucket, f'{user_name}/history.json')
-        history = json.loads(history_response['Body'].read())
+        history = history_response['Body']
 
         return history
 
