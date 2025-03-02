@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import PDFViewComponent from "@/app/components/PDFViewComponent";
 import GenerateResumeComponent from "@/app/components/GenerateResumeComponent";
 import History from "@/app/components/History";
