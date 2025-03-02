@@ -60,7 +60,7 @@ def get_history(bucket: str, user_name: str, password: str) -> dict[str, 'perspe
     """
     Reads the json history from a given user.
     """
-    with _auth_user(bucket, user_name, password) as s3_client:
+    with auth_user(bucket, user_name, password) as s3_client:
         history_response = _get_object(s3_client, bucket, f'{user_name}/history.json')
         history = json.loads(history_response['Body'].read().decode('utf-8'))
 
@@ -71,7 +71,7 @@ def create_history(bucket: str, user_name: str, password: str, history: dict) ->
     """
     Creates a history for a given user.
     """
-    with _auth_user(bucket, user_name, password) as s3_client:
+    with auth_user(bucket, user_name, password) as s3_client:
         s3_client.put_object(Bucket = bucket, Key = f'{user_name}/history.json', Body = json.dumps(history))
 
 
@@ -79,7 +79,7 @@ def get_generated_resume(bucket: str, user_name: str, password: str, resume_name
     """
     Gets a generated resume from the given user.
     """
-    with _auth_user(bucket, user_name, password) as s3_client:
+    with auth_user(bucket, user_name, password) as s3_client:
         resume_response = _get_object(s3_client, bucket, f'{user_name}/{resume_name}.pdf')
             
         if resume_response is None:
@@ -92,7 +92,7 @@ def store_generated_resume(bucket: str, user_name: str, password: str, resume_na
     """
     Stores the given resume for the given user.
     """
-    with _auth_user(bucket, user_name, password) as s3_client:
+    with auth_user(bucket, user_name, password) as s3_client:
         s3_client.put_object(Bucket = bucket, Key = f'{user_name}/{resume_name}.pdf', Body = generated_resume)
 
 
@@ -125,7 +125,7 @@ def _get_auth_pairs(s3_client: 's3_client', bucket: str) -> 'json':
     return auth_pairs
 
 
-def _auth_user(bucket: str, user_name: str, password: str) -> S3Client:
+def auth_user(bucket: str, user_name: str, password: str) -> S3Client:
     """
     Authenticates if the user even exists and if their password matches, 
     if not it raises FailedUserAuthError.

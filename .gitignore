@@ -3,3 +3,4 @@
 /venv
 /backend/__pycache__
 /backend/resume.pdf
+/backend/modules/__pycache__

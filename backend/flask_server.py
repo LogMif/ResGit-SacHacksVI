@@ -9,17 +9,17 @@ import resgit_api as rg
 app = Flask(__name__)
 CORS(app)
 
-@app.route("/add_to_history", methods=["POST"])
-def flask_add_to_history() -> dict[str, int | str]:
-    """api function merges current history with new added history"""
-    warnings.filterwarnings("ignore")
-    data = request.get_json()
+# @app.route("/add_to_history", methods=["POST"])
+# def flask_add_to_history() -> dict[str, int | str]:
+#     """api function merges current history with new added history"""
+#     warnings.filterwarnings("ignore")
+#     data = request.get_json()
 
-    new_history = data.get("new_history", "")
-    username = data.get("usernane", "")
-    password = data.get("password", "")
+#     new_history = data.get("new_history", "")
+#     username = data.get("username", "")
+#     password = data.get("password", "")
 
-    return rg.add_user_history(new_history, "", "")
+#     return rg.add_user_history(new_history, "", "")
 
 @app.route("/create_user", methods=["POST"])
 def flask_create_user() -> dict[str, int | str]:
@@ -27,33 +27,57 @@ def flask_create_user() -> dict[str, int | str]:
     warnings.filterwarnings("ignore")
     data = request.get_json()
 
-    username = data.get("usernane", "")
+    username = data.get("username", "")
     password = data.get("password", "")
 
-    return rg.create_user(username, password)
+    return rg.add_user(username, password)
 
-@app.route("/get_user_history", methods=["POST"])
-def flask_get_user_history() -> dict[str, int | str]:
-    """api function returns user history"""
+@app.route("/auth_user", methods=["POST"])
+def flask_authenticate_user() -> dict[str, int | str]:
+    """api function authenticates user with database"""
     warnings.filterwarnings("ignore")
     data = request.get_json()
 
-    username = data.get("usernane", "")
+    username = data.get("username", "")
     password = data.get("password", "")
 
-    return rg.get_user_history(username, password)
+    response = rg.authenticate_user(username, password)
+    return response
 
-@app.route("/generate_resume", methods=["POST"])
-def flask_generate_resume() -> dict[str, int | str]:
-    """api function generates resume with selected information"""
+@app.route("/get_past_resume_names", methods=["POST"])
+def flask_get_past_resume_names() -> dict[str, int | str]:
+    """api function gets past resume names from database"""
     warnings.filterwarnings("ignore")
     data = request.get_json()
 
-    username = data.get("usernane", "")
+    username = data.get("username", "")
     password = data.get("password", "")
-    selected_items = data.get("selected_data", "")
 
-    return rg.generate_resume(selected_items, username, password)
+    response = rg.get_past_resume_names(username, password)
+    return response
+
+# @app.route("/get_user_history", methods=["POST"])
+# def flask_get_user_history() -> dict[str, int | str]:
+#     """api function returns user history"""
+#     warnings.filterwarnings("ignore")
+#     data = request.get_json()
+
+#     username = data.get("username", "")
+#     password = data.get("password", "")
+
+#     return rg.get_user_history(username, password)
+
+# @app.route("/generate_resume", methods=["POST"])
+# def flask_generate_resume() -> dict[str, int | str]:
+#     """api function generates resume with selected information"""
+#     warnings.filterwarnings("ignore")
+#     data = request.get_json()
+
+#     username = data.get("username", "")
+#     password = data.get("password", "")
+#     selected_items = data.get("selected_data", "")
+
+#     return rg.generate_resume(selected_items, username, password)
 
 
 
