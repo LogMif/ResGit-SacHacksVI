@@ -106,7 +106,8 @@ def parse_pdf_text_to_history(pdf_text: str) -> dict:
             Here is another sample of the same template: {history_template2}
             \n\n
             This template is to be filled out with the following text that represents a resume,
-            putting the data from that text into the approriate sections of the dictionary template. 
+            putting the data from that text into the approriate sections of the dictionary template.
+            Do not change the data type for the values in the template. If it is a string, keep it as a string. if it is a list, keep it as a list. 
             Here is the data to fill the template: {pdf_text}
             '''
 
