@@ -7,10 +7,6 @@ from bs4 import BeautifulSoup
 import json
 import os
 
-import dotenv
-
-dotenv.load_dotenv('../.env')
-
 def _scrape_webpage(url: str) -> BeautifulSoup:
     """
     Takes a url and gets its webpage content.
@@ -20,7 +16,7 @@ def _scrape_webpage(url: str) -> BeautifulSoup:
     try:
         response = urllib.request.urlopen(request)
         
-        soup = BeautifulSoup(response)
+        soup = BeautifulSoup(response, features='html.parser')
         return soup.get_text(' ', strip=True)
     except urllib.error.URLError:
         print('Failed to open.')
@@ -38,9 +34,8 @@ def _ai_summarize_job(page_text: str) -> str:
     model_id = 'amazon.nova-lite-v1:0'
 
     prompt = f'''
-            Give me the entire job description for the first job listing on this webpage. 
-            Ignore any unrelated text to the job description and all job listings after the first. 
-            Only provide the description for the first job from the following webpage: {page_text}
+            Give me the entire job description from the first job in this list of text,
+            stopping before any other job: {page_text}
             '''
 
 
@@ -57,7 +52,7 @@ def _ai_summarize_job(page_text: str) -> str:
         ],
         inferenceConfig = {
             'maxTokens': 2048,
-            'temperature': 0.9,
+            'temperature': 0,
             'topP': 1,
             'stopSequences': [
                 'string'
@@ -65,11 +60,16 @@ def _ai_summarize_job(page_text: str) -> str:
         }
     )
 
-    ai_summary = json.loads(ai_response['Body'].read())
-    generated_text = "".join([output['text'] for output in ai_summary['content']])
+    generated_text = ai_response['output']['message']['content'][0]['text']
 
     return generated_text
 
-    
 
-print(_ai_summarize_job('https://www.linkedin.com/jobs/view/part-time-work-from-home-data-entry-clerk-100%25-remote-at-bekafor-llc-4172143699?trk=public_jobs_topcard-title'))
+def ai_job_summary(url: str) -> str:
+    """
+    Scrapes the given job page and passes the response to 
+    an Amazon LLM, which parses the page for the job description.
+    """
+    page_text  = _scrape_webpage(url)
+
+    return _ai_summarize_job(page_text)
