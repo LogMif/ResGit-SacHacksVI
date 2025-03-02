@@ -1,8 +1,8 @@
 import boto3
 import os
 import dotenv
-import job_scrapper
-from history_class import history
+from modules import job_scrapper
+from modules.history_class import history
 
 dotenv.load_dotenv('../.env')
 
