@@ -191,66 +191,111 @@ def get_resume(history: history_class.history) -> bytes:
 
 
 if __name__ == "__main__":
-    """sample history raw dict"""
-    sample = {
+    history_template = {
         "user info": {
             "name": "testName",
             "email": "testemail@gmail.com",
-            "linkedin url": "https://www.linkedin.com/in/kierann-chong",
-            "personal url": "https://green-kiwie.github.io/Kierann\_Resume.github.io",
-            "contact_number": "(949) 822-4004"
+            "address": "12345 Street Name, City, State",
+            'linkedin url': 'wow',
+            'personal url': 'its personal',
+            "contact_number": "1234567891"
         },
         "education": {
-            "school 1 (university name)": {
-                "location (city/country)": "California",
-                "degree": "BSc in Computer Science",
-                "year status": "Sophomore",
-                "expected graduation": "May 2027"
+            "school 1": {
+                'location (city/country)': 'Cali',
+                "dates": "September 2024, June 2026",
+                'degree': 'BS in BSing',
+                'year status': 'Junior',
+                'expected graduation': '203000',
+                "major": "Computer Science, BS"
             }
         },
         "technical skills": {
-            "skill category 1 (languages)": ["Python", "Pandas", "Tensorflow", "Gensim", "LangChain", "Yfinance", "Huggingface", "C++", "SQL", "HTML"],
-            "skill category 2 (tools)": ["AWS (Bedrock, Glue, Lambda, DynamoDB, S3 Bucket)", "Sharepoint", "PowerApps", "Git"]
+            "skill 1": "Such a good programmer",
+            "skill 2": "The stupid API back-end made didn't accept POST :)"
         },
         "experiences": {
-            "arc 1 (job tile)": {
-                "company": "google",
-                "job dates": "July 2024-September 2024",
-                "perspectives": {
+            "arc 1": {
+                'company': 'Mario',
+                'job dates': '2010-2020',
+                'perspectives': {
+                    "perspective": ["bullet 1", "bullet 2"],
+                    "perspective 2": ["bullet 1", "bullet 2"]
+                }
+            },
+            "arc 2": {
+                'company': 'Luigi',
+                'job dates': '2020-2023',
+                'perspectives': {
                     "perspective": ["bullet 1", "bullet 2"],
                     "perspective 2": ["bullet 1", "bullet 2"],
                 }
-            },
-            "arc 2 (job title)": {
-                "company": "disney",
-                "job dates": "July 2024-September 2024",
+            }
+        }
+    }
+
+    history_template2 = {
+        "user info": {
+            "name": "pft",
+            "email": "pft@gmail.com",
+            "linkedin url": "hhehe love linkedin",
+            "personal url": "github nerds",
+            "contact_number": "insert pphone numbers here"
+        },
+        "education": {
+            "UC I": {
+                "location (city/country)": "US",
+                "degree": "BSc in stupidify",
+                "year status": "freshjuice",
+                "expected graduation": "June 2020"
+            }
+        },
+        "technical skills": {
+            "interpersonnel": ["kindness", "empathatic", "pathetic"],
+            "hard skills": ["excel", "powerpoint"]
+        },
+        "experiences": {
+            "microsfot server": {
+                "company": "microsoft",
+                "job dates": "insert fake dates here",
                 "perspectives": {
-                    "perspective": ["bullet 1", "bullet 2"],
-                    "perspective 2": ["bullet 1", "bullet 2"],
+                    "my first idea": ["hehe", "haha"],
+                    "second idea": ["sad", "sadly"],
+                }
+            },
+            "arc 2": {
+                "company": "clown inc",
+                "job dates": "whoop",
+                "perspectives": {
+                    "happy": ["hah", "hoho"],
+                    "sad": ["womp womp", "woomp"],
                 }
             }
         },
         "awards":{
-            "award 1 (award title)": {
-                "institution": "UC Irvine, California",
-                "award date": "2024-2025",
+            "best person award": {
+                "institution": "white house",
+                "award date": "2003",
                 "award description": [
-                    "Awarded for research on the statistical distribution of distant galaxies to analyze the young universe."
+                    "Voted most loved person ever"
                 ]
             },
-            "award 2 (award title)": {
-                "institution": "UC Irvine, California",
-                "award date": "2024-2025",
+            "stupidest person award": {
+                "institution": "fund house",
+                "award date": "2100",
                 "award description": [
-                    "award!"
+                    "lost the company 10 trillion"
                 ]
             }
         }
     }
 
+    history1 = history_class.history(history_template)
+    history2 = history_class.history(history_template2)
 
-    hist = history_class.history(sample)
-    get_resume(hist)
+    history1.merge_histories(history2)
+
+    get_resume(history1)
 
 
 

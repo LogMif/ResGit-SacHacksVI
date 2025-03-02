@@ -45,9 +45,17 @@ class user_info:
 class education:
     def __init__(self, education_dict: dict, university_name: str):
         try:
+            if not "location (city/country)" in education_dict:
+                education_dict["location (city/country)"] = None 
             self._location = education_dict["location (city/country)"]
+            if not "degree" in education_dict:
+                education_dict["degree"] = None 
             self._degree = education_dict["degree"]
+            if not "year status" in education_dict:
+                education_dict["year status"] = None 
             self._year_status = education_dict["year status"]
+            if not "expected graduation" in education_dict:
+                education_dict["expected graduation"] = None 
             self._expected_graduation = education_dict["expected graduation"]
             self._university = university_name
 
@@ -128,7 +136,11 @@ class experiences:
     def __init__(self, experience_dict: dict, job_title: str):
         try:
             self._job_title = job_title
+            if not "company" in experience_dict:
+                experience_dict["company"] = None
             self._company = experience_dict["company"]
+            if not "job dates" in experience_dict:
+                experience_dict["job dates"] = None
             self._job_dates = experience_dict["job dates"]
             self._perspectives = [perspective(perspective_name, perspective_bullets) \
                                   for perspective_name, perspective_bullets \
@@ -161,7 +173,11 @@ class awards:
     def __init__(self, award_dict: dict, award_title: str):
         try:
             self._award_title = award_title
+            if not "company" in award_dict:
+                award_dict["company"] = None
             self._institution = award_dict["institution"]
+            if not "company" in award_dict:
+                award_dict["company"] = None
             self._award_date = award_dict["award date"]
             self._award_description = award_dict["award description"]
         except Exception as e:
@@ -201,9 +217,11 @@ class history:
         self._experiences = [experiences(experience_dict, job_title) \
                                     for job_title, experience_dict in \
                                     history_raw_dict["experiences"].items()]
+        if not 'awards' in history_raw_dict:
+            history_raw_dict['awards'] = {}
         self._awards = [awards(award_dict, award_title) \
-                        for award_title, award_dict in \
-                            history_raw_dict["awards"].items()]
+                    for award_title, award_dict in \
+                        history_raw_dict["awards"].items()]
         
     def education(self) -> list[education]:
         return self._education
@@ -251,92 +269,42 @@ class history:
 
         for merge_arc in merging_history_json['experiences']:
             if not merge_arc in new_history_json['experiences']:
-                new_history_json['experiences'][merge_arc] = {}
-                new_history_json['experiences'][merge_arc]['company'] = merging_history_json['experiences'][merge_arc]['company']
-                new_history_json['experiences'][merge_arc]['job dates'] = merging_history_json['experiences'][merge_arc]['job dates']
+                new_history_json['experiences'][merge_arc] = merging_history_json['experiences'][merge_arc]
+                continue
 
-            merge_experience_first_bullet = merging_history_json['experiences'][merge_arc]['perspective'][0]                    
-            new_history_json['experiences'][merge_arc]['perspectives'][merge_arc + merge_experience_first_bullet] = merging_history_json['experiences'][merge_arc]['perspective']
+            for perspective in merging_history_json['experiences'][merge_arc]['perspectives']:                  
+                new_history_json['experiences'][merge_arc]['perspectives'][merge_arc + perspective] = merging_history_json['experiences'][merge_arc]['perspectives'][perspective]
 
         for merge_award in merging_history_json['awards']:
             new_history_json['awards'][merge_award] = merging_history_json['awards'][merge_award]
-            
         
         self.__init__(new_history_json)
 
 
     def jsonify(self) -> dict:
         output = dict()
-        output["user info"] = self.user_info().jsonify()
+        try:
+            output["user info"] = self.user_info().jsonify()
+        except:
+            output["user info"] = {}
+        try:
+            output["education"] = {x.university(): x.jsonify() for x in self.education()}
+        except:
+            output["education"] = {}
 
-        output["education"] = {x.university(): x.jsonify() for x in self.education()}
+        try:
+            output["technical skills"] = {x.skill_category(): x.jsonify() for x in self.technical_skills()}
+        except:
+            output["technical skills"] = {}
 
-        output["technical skills"] = {x.skill_category(): x.jsonify() for x in self.technical_skills()}
+        try:
+            output["experiences"] = {x.job_title(): x.jsonify() for x in self.experiences()}
+        except:
+            output["experiences"] = {}
 
-        output["experiences"] = {x.job_title(): x.jsonify() for x in self.experiences()}
-
-        output["awards"] = {x.award_title(): x.jsonify() for x in self.awards()}
+        try:
+            output["awards"] = {x.award_title(): x.jsonify() for x in self.awards()}
+        except:
+            output["awards"] = {}
 
         return output
-
-
-"""sample history raw dict"""
-sample = {
-    "user info": {
-        "name": "testName",
-        "email": "testemail@gmail.com",
-        "linkedin url": "https://www.linkedin.com/in/kierann-chong",
-        "personal url": "https://green-kiwie.github.io/Kierann\_Resume.github.io",
-        "contact_number": "(949) 822-4004"
-    },
-    "education": {
-        "school 1 (university name)": {
-            "location (city/country)": "California",
-            "degree": "BSc in Computer Science",
-            "year status": "Sophomore",
-            "expected graduation": "May 2027",
-            "gpa": "3.9"
-        }
-    },
-    "technical skills": {
-        "skill category 1 (languages)": ["Python", "Pandas", "Tensorflow", "Gensim", "LangChain", "Yfinance", "Huggingface", "C++", "SQL", "HTML"],
-        "skill category 2 (tools)": ["AWS (Bedrock, Glue, Lambda, DynamoDB, S3 Bucket)", "Sharepoint", "PowerApps", "Git"]
-    },
-    "experiences": {
-        "arc 1 (job tile)": {
-            "company": "google",
-            "job dates": "July 2024-September 2024",
-            "perspectives": {
-                "perspective": ["bullet 1", "bullet 2"],
-                "perspective 2": ["bullet 1", "bullet 2"],
-            }
-        },
-        "arc 2 (job title)": {
-            "company": "disney",
-            "job dates": "July 2024-September 2024",
-            "perspectives": {
-                "perspective": ["bullet 1", "bullet 2"],
-                "perspective 2": ["bullet 1", "bullet 2"],
-            }
-        }
-    },
-    "awards":{
-        "award 1 (award title)": {
-            "institution": "UC Irvine, California",
-            "award date": "2024-2025",
-            "award description": [
-                "Awarded for research on the statistical distribution of distant galaxies to analyze the young universe."
-            ]
-        },
-        "award 2 (award title)": {
-            "institution": "UC Irvine, California",
-            "award date": "2024-2025",
-            "award description": [
-                "award!"
-            ]
-        }
-    }
-}
-
-# hist = history(sample)
-# print(hist.jsonify())
