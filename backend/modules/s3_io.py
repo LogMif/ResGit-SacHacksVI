@@ -1,7 +1,12 @@
 import boto3
 import json
 
+import dotenv
+import os
+
 import boto3.exceptions
+
+dotenv.load_dotenv('../.env')
 
 
 class FailedUserAuthError(Exception):
@@ -9,7 +14,7 @@ class FailedUserAuthError(Exception):
         self._user_exists = user_exists
 
     def __str__(self) -> str:
-        if self._user_exists:
+        if not self._user_exists:
             return "User does not exist."
 
         return "Password does not match the given username."
@@ -20,13 +25,18 @@ class UserAlreadyExistsError(Exception):
         return "A user with that username already exists."
 
 
+class GeneratedResumeDNEError(Exception):
+    def __str__(self):
+        return 'Given generated resume does not exist.'
+
+
 class S3Client:
     def __init__ (self):
-        self._client = boto3.client('s3')
+        self._client = boto3.client('s3', aws_access_key_id = os.getenv('AWS_ACCESS_KEY_ID'), aws_secret_access_key = os.getenv('AWS_SECERT_ACCESS_KEY'))
 
     
     def __enter__(self):
-        return self
+        return self._client
 
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
@@ -39,51 +49,100 @@ def create_user(bucket: str, user_name: str, password: str) -> None:
     """
 
     with S3Client() as s3_client:
-        try:
-            s3_client.put_object(Bucket = bucket, Key = user_name, Body="")
-        except boto3.exceptions.S3UploadFailedError:
+        auth_pairs = _get_auth_pairs(s3_client, bucket)
+        
+        if user_name in auth_pairs:
             raise UserAlreadyExistsError()
         
+        auth_pairs[user_name] = password
 
-def read_history(bucket: str, user_name: str) -> str:
+        json_auth_pairs = json.dumps(auth_pairs)
+
+        s3_client.put_object(Bucket = bucket, Key = f'{user_name}/')
+        s3_client.put_object(Bucket = bucket, Key = f'passwds.auth', Body = json_auth_pairs)
+
+
+def get_history(bucket: str, user_name: str, password: str) -> dict[str, 'perspectives']:
     """
     Reads the json history from a given user.
     """
-    with boto3.client("s3") as s3_client:
-        try:
-            response = s3_client.get_object(Bucket = bucket, Key = f'{user_name}/history.json')
-        except:
-            pass
+    with _auth_user(bucket, user_name, password) as s3_client:
+        history_response = _get_object(s3_client, bucket, f'{user_name}/history.json')
+        history = json.loads(history_response['Body'].read().decode('utf-8'))
 
+        return history
+
+
+def create_history(bucket: str, user_name: str, password: str, history: dict) -> None:
+    """
+    Creates a history for a given user.
+    """
+    with _auth_user(bucket, user_name, password) as s3_client:
+        s3_client.put_object(Bucket = bucket, Key = f'{user_name}/history.json', Body = json.dumps(history))
+
+
+def get_generated_resume(bucket: str, user_name: str, password: str, resume_name: str) -> bytes:
+    """
+    Gets a generated resume from the given user.
+    """
+    with _auth_user(bucket, user_name, password) as s3_client:
+        resume_response = _get_object(s3_client, bucket, f'{user_name}/{resume_name}.pdf')
+            
+        if resume_response is None:
+            raise GeneratedResumeDNEError()
         
-create_user('resgit-bucket', 'Boo', 'BestPasswordEver')
+        return resume_response['Body'].read()
+    
+
+def store_generated_resume(bucket: str, user_name: str, password: str, resume_name: str, generated_resume: bytes):
+    """
+    Stores the given resume for the given user.
+    """
+    with _auth_user(bucket, user_name, password) as s3_client:
+        s3_client.put_object(Bucket = bucket, Key = f'{user_name}/{resume_name}.pdf', Body = generated_resume)
 
 
-def _get_passwords(bucket: str):
-    pass 
+def _get_object(s3_client, bucket: str, path: str) -> dict[str, str] | None:
+    """
+    Gets an object from the given bucket at the given path,
+    returning None if the objected does not exist.
+    """
+    try:
+        item = s3_client.get_object(Bucket = bucket, Key = path)
+        return item
+    except:
+        return None
+
+
+def _get_auth_pairs(s3_client: 's3_client', bucket: str) -> 'json':
+    """
+    Gets the user_name and password pairs.
+    """
+    password_response = _get_object(s3_client, bucket, 'passwds.auth')
+
+    if password_response is None:
+        s3_client.put_object(Bucket = bucket, Key = 'passwds.auth', Body = '{}')
+        password_response = _get_object(s3_client, bucket, 'passwds.auth')
+
+    passwords = password_response['Body'].read().decode('utf-8')
+
+    auth_pairs = json.loads(passwords)
+
+    return auth_pairs
 
 
 def _auth_user(bucket: str, user_name: str, password: str) -> S3Client:
     """
-    Authenticates if the user even exists, if not it raises FailedUserAuthError
+    Authenticates if the user even exists and if their password matches, 
+    if not it raises FailedUserAuthError.
     """
-    s3_client = boto3.client("s3")
+    with S3Client() as s3_client:
+        auth_pairs = _get_auth_pairs(s3_client, bucket)
+        
+        if not user_name in auth_pairs:
+            raise FailedUserAuthError(False)
+        
+        if auth_pairs[user_name] != password:
+            raise FailedUserAuthError(True)
 
-    try:
-        s3_client.get_object(Bucket = bucket, Key = user_name)
-
-        password_response = s3_client.get_object(Bucket = bucket, Key = 'passwds.auth')
-        passwords = password_response['Body'].read().decode('utf-8')
-
-        print(passwords)
-
-        if not password in passwords:
-            pass
-
-    except:
-        pass
-
-    return s3_client
-
-
-#_auth_user('resgit-bucket', 'wow', 'password123')
+        return S3Client()
