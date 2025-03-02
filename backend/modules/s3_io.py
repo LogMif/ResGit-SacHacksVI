@@ -1,11 +1,7 @@
 import boto3
 import json
 
-import dotenv
-
 import boto3.exceptions
-
-dotenv.load_dotenv('../.env')
 
 class FailedUserAuthError(Exception):
     def __init__(self, user_exists: bool):
@@ -160,6 +156,3 @@ def auth_user(bucket: str, user_name: str, password: str) -> S3Client:
             raise FailedUserAuthError(True)
 
         return S3Client()
-    
-
-print(get_all_generated_resume_names('resgit-bucket', 'Boo', 'Password123'))
