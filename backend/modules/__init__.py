@@ -1,1 +1,1 @@
-from s3_io import *
+from .s3_io import *

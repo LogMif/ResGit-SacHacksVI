@@ -1,13 +1,7 @@
 import boto3
 import json
 
-import dotenv
-import os
-
 import boto3.exceptions
-
-dotenv.load_dotenv('../.env')
-
 
 class FailedUserAuthError(Exception):
     def __init__(self, user_exists: bool):
@@ -32,7 +26,7 @@ class GeneratedResumeDNEError(Exception):
 
 class S3Client:
     def __init__ (self):
-        self._client = boto3.client('s3', aws_access_key_id = os.getenv('AWS_ACCESS_KEY_ID'), aws_secret_access_key = os.getenv('AWS_SECERT_ACCESS_KEY'))
+        self._client = boto3.client('s3')
 
     
     def __enter__(self):
