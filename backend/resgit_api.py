@@ -102,3 +102,4 @@ def generate_resume(bucket, selected_history: str, username: str, password: str,
 
 if __name__ == "__main__":
     add_user("Kierann", "password")
+    
