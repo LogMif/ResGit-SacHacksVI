@@ -4,8 +4,8 @@ import dotenv
 import os
 from flask import jsonify
 from modules import s3_io as s3
-from modules import latex_builder as lb
 from modules import history_class
+from modules import latex_builder as lb
 import base64
 
 dotenv.load_dotenv()
@@ -47,16 +47,6 @@ def flask_function(func: callable) -> dict[str, int | str]:
 #     updated_history = ""
 #     return {"history": updated_history}
     
-# @flask_function
-# def get_ai_recommend_link(bucket, username: str, password: str, job_link: str) -> dict:
-#     #recommended history
-#     return {"history": recommended_history}
-
-# @flask_function
-# def get_ai_recommend_manual(bucket, username: str, password: str, job_details: str) -> dict:
-#     #recommended history
-#     return {"history": recommended_history}
-
 @flask_function
 def add_user(bucket, username: str, password: str) -> dict:
     s3.create_user(bucket, username, password)
@@ -95,7 +85,6 @@ def generate_resume(bucket, selected_history: str, username: str, password: str,
     s3.store_generated_resume(bucket, username, password, resume_name, generated_resume_binary)
    
     return {"resume": encoded_binary}
-
 
 if __name__ == "__main__":
     add_user("Kierann", "password")

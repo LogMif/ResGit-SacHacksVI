@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="935" height="842" viewBox="0 0 935 842">
+  <defs>
+    <filter id="Rectangle_29" x="0" y="528" width="205" height="55" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Rectangle_29-2" x="19" y="531" width="168" height="49" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-2"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-2"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Intersection_1" x="208" y="461" width="355" height="364" filterUnits="userSpaceOnUse">
+      <feOffset dx="-3" dy="-3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-3"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-3"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Rectangle_5" x="257" y="102" width="678" height="235" filterUnits="userSpaceOnUse">
+      <feOffset dx="4" dy="4" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="4" result="blur-4"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-4"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Rectangle_15" x="257" y="332" width="678" height="235" filterUnits="userSpaceOnUse">
+      <feOffset dx="4" dy="4" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="4" result="blur-5"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-5"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="Group_4" data-name="Group 4" transform="translate(-921 -137)">
+    <g id="Rectangle_4" data-name="Rectangle 4" transform="translate(1050 210)" fill="none" stroke="#578fca" stroke-width="4">
+      <rect width="563" height="769" rx="36" stroke="none"/>
+      <rect x="2" y="2" width="559" height="765" rx="34" fill="none"/>
+    </g>
+    <g transform="matrix(1, 0, 0, 1, 921, 137)" filter="url(#Rectangle_29)">
+      <rect id="Rectangle_29-3" data-name="Rectangle 29" width="187" height="37" rx="15" transform="translate(9 534)" fill="#fff"/>
+    </g>
+    <path id="Path_5" data-name="Path 5" d="M13.306,0H340.841a13.278,13.278,0,0,1,13.306,13.25V552.428a13.278,13.278,0,0,1-13.306,13.25H13.306A13.278,13.278,0,0,1,0,552.428V13.25A13.278,13.278,0,0,1,13.306,0Z" transform="translate(923 964.147) rotate(-90)" fill="#f6f6f6"/>
+    <g transform="matrix(1, 0, 0, 1, 921, 137)" filter="url(#Rectangle_29-2)">
+      <rect id="Rectangle_29-4" data-name="Rectangle 29" width="150" height="31" rx="10" transform="translate(28 537)" fill="#fff"/>
+    </g>
+    <text id="User_History" data-name="User History" transform="translate(972 642)" fill="#363636" font-size="26" font-family="Poppins-Light, Poppins" font-weight="300"><tspan x="0" y="0">User History</tspan></text>
+    <text id="Main_resumé_" data-name="Main resumé " transform="translate(961 697)" fill="#363636" font-size="20" font-family="Poppins-Light, Poppins" font-weight="300"><tspan x="0" y="0">Main resumé </tspan></text>
+    <text id="resumé_1" transform="translate(956.848 744.623)" fill="#363636" font-size="19" font-family="Poppins-Light, Poppins" font-weight="300"><tspan x="0" y="0">resumé_1</tspan></text>
+    <text id="resumé_2" transform="translate(956.848 775.838)" fill="#363636" font-size="19" font-family="Poppins-Light, Poppins" font-weight="300"><tspan x="0" y="0">resumé_2</tspan></text>
+    <rect id="Rectangle_32" data-name="Rectangle 32" width="230" height="28" rx="6" transform="translate(930 787)" fill="#e0e2e4"/>
+    <text id="resumé_3" transform="translate(956.848 807.053)" fill="#363636" font-size="19" font-family="Poppins-Light, Poppins" font-weight="300"><tspan x="0" y="0">resumé_3</tspan></text>
+    <ellipse id="Ellipse_4" data-name="Ellipse 4" cx="18" cy="18.5" rx="18" ry="18.5" transform="translate(930 615)" fill="#fff"/>
+    <path id="Icon_awesome-user-alt" data-name="Icon awesome-user-alt" d="M10.21,11.486A5.743,5.743,0,1,0,4.467,5.743,5.745,5.745,0,0,0,10.21,11.486Zm5.1,1.276h-2.2a6.943,6.943,0,0,1-5.815,0H5.1a5.1,5.1,0,0,0-5.1,5.1v.638A1.915,1.915,0,0,0,1.914,20.42H18.506a1.915,1.915,0,0,0,1.914-1.914v-.638A5.1,5.1,0,0,0,15.315,12.762Z" transform="translate(938.048 623.606)"/>
+    <path id="Icon_awesome-file-alt" data-name="Icon awesome-file-alt" d="M6.68,4.056V0H.716A.714.714,0,0,0,0,.716V14.552a.714.714,0,0,0,.716.716H10.735a.714.714,0,0,0,.716-.716V4.771H7.4A.718.718,0,0,1,6.68,4.056Zm1.908,7.037a.359.359,0,0,1-.358.358H3.221a.359.359,0,0,1-.358-.358v-.239a.359.359,0,0,1,.358-.358H8.23a.359.359,0,0,1,.358.358Zm0-1.908a.359.359,0,0,1-.358.358H3.221a.359.359,0,0,1-.358-.358V8.946a.359.359,0,0,1,.358-.358H8.23a.359.359,0,0,1,.358.358Zm0-2.147v.239a.359.359,0,0,1-.358.358H3.221a.359.359,0,0,1-.358-.358V7.037a.359.359,0,0,1,.358-.358H8.23A.359.359,0,0,1,8.588,7.037Zm2.863-3.4v.182H7.634V0h.182a.715.715,0,0,1,.507.209l2.919,2.922A.713.713,0,0,1,11.451,3.635Z" transform="translate(938.048 730.823)"/>
+    <path id="Icon_awesome-file-alt-2" data-name="Icon awesome-file-alt" d="M6.68,4.056V0H.716A.714.714,0,0,0,0,.716V14.552a.714.714,0,0,0,.716.716H10.735a.714.714,0,0,0,.716-.716V4.771H7.4A.718.718,0,0,1,6.68,4.056Zm1.908,7.037a.359.359,0,0,1-.358.358H3.221a.359.359,0,0,1-.358-.358v-.239a.359.359,0,0,1,.358-.358H8.23a.359.359,0,0,1,.358.358Zm0-1.908a.359.359,0,0,1-.358.358H3.221a.359.359,0,0,1-.358-.358V8.946a.359.359,0,0,1,.358-.358H8.23a.359.359,0,0,1,.358.358Zm0-2.147v.239a.359.359,0,0,1-.358.358H3.221a.359.359,0,0,1-.358-.358V7.037a.359.359,0,0,1,.358-.358H8.23A.359.359,0,0,1,8.588,7.037Zm2.863-3.4v.182H7.634V0h.182a.715.715,0,0,1,.507.209l2.919,2.922A.713.713,0,0,1,11.451,3.635Z" transform="translate(938.048 762.038)"/>
+    <path id="Icon_awesome-file-alt-3" data-name="Icon awesome-file-alt" d="M6.68,4.056V0H.716A.714.714,0,0,0,0,.716V14.552a.714.714,0,0,0,.716.716H10.735a.714.714,0,0,0,.716-.716V4.771H7.4A.718.718,0,0,1,6.68,4.056Zm1.908,7.037a.359.359,0,0,1-.358.358H3.221a.359.359,0,0,1-.358-.358v-.239a.359.359,0,0,1,.358-.358H8.23a.359.359,0,0,1,.358.358Zm0-1.908a.359.359,0,0,1-.358.358H3.221a.359.359,0,0,1-.358-.358V8.946a.359.359,0,0,1,.358-.358H8.23a.359.359,0,0,1,.358.358Zm0-2.147v.239a.359.359,0,0,1-.358.358H3.221a.359.359,0,0,1-.358-.358V7.037a.359.359,0,0,1,.358-.358H8.23A.359.359,0,0,1,8.588,7.037Zm2.863-3.4v.182H7.634V0h.182a.715.715,0,0,1,.507.209l2.919,2.922A.713.713,0,0,1,11.451,3.635Z" transform="translate(938.048 793.253)"/>
+    <g transform="matrix(1, 0, 0, 1, 921, 137)" filter="url(#Intersection_1)">
+      <path id="Intersection_1-2" data-name="Intersection 1" d="M218,346V45A45,45,0,0,1,263,0H535a44.95,44.95,0,0,1,14.52,2.394A12.984,12.984,0,0,1,555,13V333a13,13,0,0,1-13,13Z" transform="translate(2 473)" fill="#fff"/>
+    </g>
+    <rect id="Rectangle_33" data-name="Rectangle 33" width="288" height="280" transform="translate(1166 676)" fill="#e0e2e4"/>
+    <rect id="Rectangle_34" data-name="Rectangle 34" width="288" height="45" transform="translate(1166 676)" fill="silver"/>
+    <g id="Group_2" data-name="Group 2" transform="translate(38 9)">
+      <rect id="Rectangle_7" data-name="Rectangle 7" width="326" height="438" rx="13" transform="translate(1300 128)" fill="#3674b5"/>
+      <g transform="matrix(1, 0, 0, 1, 883, 128)" filter="url(#Rectangle_5)">
+        <rect id="Rectangle_5-2" data-name="Rectangle 5" width="654" height="211" rx="22" transform="translate(265 110)" fill="#fff"/>
+      </g>
+      <g transform="matrix(1, 0, 0, 1, 883, 128)" filter="url(#Rectangle_15)">
+        <rect id="Rectangle_15-2" data-name="Rectangle 15" width="654" height="211" rx="22" transform="translate(265 340)" fill="#fff"/>
+      </g>
+      <g id="Ellipse_1" data-name="Ellipse 1" transform="translate(1683 289)" fill="#fff" stroke="#363636" stroke-width="2">
+        <circle cx="47" cy="47" r="47" stroke="none"/>
+        <circle cx="47" cy="47" r="46" fill="none"/>
+      </g>
+      <g id="Ellipse_2" data-name="Ellipse 2" transform="translate(1683 522)" fill="#fff" stroke="#363636" stroke-width="2">
+        <circle cx="47" cy="47" r="47" stroke="none"/>
+        <circle cx="47" cy="47" r="46" fill="none"/>
+      </g>
+      <path id="Icon_awesome-check" data-name="Icon awesome-check" d="M19.835,47.272.855,28.291a2.92,2.92,0,0,1,0-4.13l4.129-4.13a2.92,2.92,0,0,1,4.13,0L21.9,32.818,49.286,5.432a2.92,2.92,0,0,1,4.13,0l4.129,4.13a2.92,2.92,0,0,1,0,4.13l-33.58,33.58A2.92,2.92,0,0,1,19.835,47.272Z" transform="translate(1700.6 309.148)" fill="#a0c878"/>
+      <path id="Icon_awesome-check-2" data-name="Icon awesome-check" d="M19.835,47.272.855,28.291a2.92,2.92,0,0,1,0-4.13l4.129-4.13a2.92,2.92,0,0,1,4.13,0L21.9,32.818,49.286,5.432a2.92,2.92,0,0,1,4.13,0l4.129,4.13a2.92,2.92,0,0,1,0,4.13l-33.58,33.58A2.92,2.92,0,0,1,19.835,47.272Z" transform="translate(1700.6 542.148)" fill="none" stroke="#363636" stroke-width="2"/>
+      <text id="Lorem_ipsum_dolor_sit_amet_consectetur_adipiscing_elit._In_eleifend_scelerisque_augue_nec_maximus_sem_gravida_id." data-name="Lorem ipsum dolor sit amet, consectetur adipiscing elit. In eleifend scelerisque augue, nec maximus sem gravida id." transform="translate(1197 300)" fill="#363636" font-size="20" font-family="Poppins-Regular, Poppins"><tspan x="0" y="21">Lorem ipsum dolor sit amet, consectetur </tspan><tspan x="0" y="51">adipiscing elit. In eleifend scelerisque augue, </tspan><tspan x="0" y="81">nec maximus sem gravida id.</tspan></text>
+      <text id="Suspendisse_potenti._Donec_efficitur_eros_libero_ac_malesuada_metus_venenatis_a." data-name="Suspendisse potenti. Donec efficitur eros libero, ac malesuada metus venenatis a." transform="translate(1197 540)" fill="#363636" font-size="20" font-family="Poppins-Regular, Poppins"><tspan x="0" y="21">Suspendisse potenti. Donec efficitur eros </tspan><tspan x="0" y="51">libero, ac malesuada metus venenatis a.</tspan></text>
+      <path id="Icon_awesome-mouse-pointer" data-name="Icon awesome-mouse-pointer" d="M20.942,22.809H13.59l3.869,9.424A1.287,1.287,0,0,1,16.8,33.9L13.4,35.381a1.226,1.226,0,0,1-1.617-.673L8.1,25.759,2.1,31.936A1.226,1.226,0,0,1,0,31.045V1.268A1.226,1.226,0,0,1,2.1.377L21.808,20.65A1.27,1.27,0,0,1,20.942,22.809Z" transform="translate(1531.912 377.518)" fill="#363636"/>
+    </g>
+    <circle id="Ellipse_5" data-name="Ellipse 5" cx="4.5" cy="4.5" r="4.5" transform="translate(1430 694)" fill="#fff"/>
+    <circle id="Ellipse_6" data-name="Ellipse 6" cx="4.5" cy="4.5" r="4.5" transform="translate(1415 694)" fill="#fff"/>
+    <circle id="Ellipse_7" data-name="Ellipse 7" cx="4.5" cy="4.5" r="4.5" transform="translate(1400 694)" fill="#fff"/>
+    <path id="Icon_awesome-download" data-name="Icon awesome-download" d="M6.13,0H8.4a.68.68,0,0,1,.681.681V5.449h2.489a.567.567,0,0,1,.4.968l-4.317,4.32a.55.55,0,0,1-.775,0L2.557,6.417a.567.567,0,0,1,.4-.968H5.449V.681A.68.68,0,0,1,6.13,0Zm8.4,10.671V13.85a.68.68,0,0,1-.681.681H.681A.68.68,0,0,1,0,13.85V10.671A.68.68,0,0,1,.681,9.99H4.845l1.391,1.391a1.454,1.454,0,0,0,2.06,0L9.687,9.99H13.85A.68.68,0,0,1,14.531,10.671Zm-3.519,2.5a.568.568,0,1,0-.568.568A.569.569,0,0,0,11.012,13.169Zm1.816,0a.568.568,0,1,0-.568.568A.569.569,0,0,0,12.828,13.169Z" transform="translate(1372.4 691.234)" fill="#fff"/>
+  </g>
+</svg>
