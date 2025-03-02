@@ -9,7 +9,7 @@ import resgit_api as rg
 app = Flask(__name__)
 CORS(app)
 
-@app.route("/add_to_history")
+@app.route("/add_to_history", methods=["POST"])
 def flask_add_to_history() -> dict[str, int | str]:
     """api function merges current history with new added history"""
     warnings.filterwarnings("ignore")
@@ -21,7 +21,7 @@ def flask_add_to_history() -> dict[str, int | str]:
 
     return rg.add_user_history(new_history, "", "")
 
-@app.route("/create_user")
+@app.route("/create_user", methods=["POST"])
 def flask_create_user() -> dict[str, int | str]:
     """api function creates user in database"""
     warnings.filterwarnings("ignore")
@@ -32,7 +32,7 @@ def flask_create_user() -> dict[str, int | str]:
 
     return rg.create_user(username, password)
 
-@app.route("/get_user_history")
+@app.route("/get_user_history", methods=["POST"])
 def flask_get_user_history() -> dict[str, int | str]:
     """api function returns user history"""
     warnings.filterwarnings("ignore")
@@ -43,7 +43,7 @@ def flask_get_user_history() -> dict[str, int | str]:
 
     return rg.get_user_history(username, password)
 
-@app.route("/generate_resume")
+@app.route("/generate_resume", methods=["POST"])
 def flask_generate_resume() -> dict[str, int | str]:
     """api function generates resume with selected information"""
     warnings.filterwarnings("ignore")

@@ -20,7 +20,7 @@ def _create_fail_output(error: Exception) -> 'jsonify':
             "location": stack_trace
         } 
 
-def flask_function(func: function) -> dict[str, int | str]:
+def flask_function(func: callable) -> dict[str, int | str]:
     def executable(*args, **kwargs):
         try:
             function_output = func(*args, **kwargs)
