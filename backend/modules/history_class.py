@@ -205,7 +205,6 @@ class history:
                         for award_title, award_dict in \
                             history_raw_dict["awards"].items()]
         
-        
     def education(self) -> list[education]:
         return self._education
     
@@ -221,25 +220,50 @@ class history:
     def awards(self) -> list[awards]:
         return self._awards
     
-    def merge_histories(self, merging_history: 'history') -> 'history':
+    def merge_histories(self, merging_history: 'history') -> None:
         """
         Merges the two histories, adding arcs if they do not exist in the original history,
         or just their perspectives to the existing arcs.
         """
-        new_history = self.jsonify()
+        new_history_json = self.jsonify()
+        merging_history_json = merging_history.jsonify()
 
-        for merge_education in self.education():
-            for original_education in self.education():
-                merge_university_name = merge_education.university().split(' ', 2)
+        for merge_education in merging_history_json['education']:
+            count = 1
 
-                
+            if merge_education in new_history_json['education']:
+                while f'school {count} {merge_education}' in new_history_json['education']:
+                    if merging_history_json['education']['degree'] == new_history_json['education']['degree']:
+                        break
 
-                if merge_education.university() != original_education.university():
-                    new_history['education'][merge_education.university()] = merge_education.jsonify()
-                elif merge_education.degree() != original_education.degree():
-                    new_history['education'][f'school {merge_university_name}']
+                    count += 1
+                                
+            new_history_json['education'][f'school {count} {merge_education}'] = merging_history_json['education'][merge_education]
+
+        for merge_skill in merging_history_json['technical skills']:
+            count = 1
+
+            if merge_skill in new_history_json['technical skills']:
+                while f'skill {count} {merge_skill}' in new_history_json['technical skills']:
+                    count += 1
+                                
+            new_history_json['technical skills'][f'skill {count} {merge_skill}'] = merging_history_json['technical skills'][merge_skill]
+
+        for merge_arc in merging_history_json['experiences']:
+            if not merge_arc in new_history_json['experiences']:
+                new_history_json['experiences'][merge_arc] = {}
+                new_history_json['experiences'][merge_arc]['company'] = merging_history_json['experiences'][merge_arc]['company']
+                new_history_json['experiences'][merge_arc]['job dates'] = merging_history_json['experiences'][merge_arc]['job dates']
+
+            merge_experience_first_bullet = merging_history_json['experiences'][merge_arc]['perspective'][0]                    
+            new_history_json['experiences'][merge_arc]['perspectives'][merge_arc + merge_experience_first_bullet] = merging_history_json['experiences'][merge_arc]['perspective']
+
+        for merge_award in merging_history_json['awards']:
+            new_history_json['awards'][merge_award] = merging_history_json['awards'][merge_award]
+            
         
-        return history
+        self.__init__(new_history_json)
+
 
     def jsonify(self) -> dict:
         output = dict()
@@ -255,7 +279,6 @@ class history:
 
         return output
 
-    
 
 """sample history raw dict"""
 sample = {
