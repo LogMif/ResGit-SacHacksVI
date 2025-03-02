@@ -1,13 +1,14 @@
 import os
 import subprocess
+import history_class
 
-def _get_contact_information() -> str:
+def _get_contact_information(user_info: history_class.user_info) -> str:
     """adds contact information"""
     name = "Kierann"
     linkedin_url = "https://www.linkedin.com/in/kierann-chong"
     email = "kierann.schong@gmail.com"
     website_url = "https://green-kiwie.github.io/Kierann\_Resume.github.io"
-    contact_number = "(949) 822-5054"
+    contact_number = "(949) 822-4004"
 
     output = f"""
         \\begin{{tabular*}}{{7in}}{{l@{{\\extracolsep{{\\fill}}}}r}}
@@ -81,94 +82,39 @@ def _get_postamble() -> str:
         \end{document}
         """
 
-def _get_education() -> str:
-    university_name = "University of California, Irvine"
-    location = "California"
-    degree = "BSc in Computer Science"
-    year_status = "Sophomore"
-    gpa = "3.92"
-    graduation_date = "May 2027"
-
-    return f"""
-        \\begin{{description}}
-
-        \\item \\ressubheading{{{university_name}}}{{{location}}}{{{degree}, {year_status}, GPA: {gpa}}}{{Expected graduation: {graduation_date}}}
-
-        \\end{{description}}
+def _get_education(educations: list[history_class.education]) -> str:
+    output =  f"""
+        \\begin{{description}}"""
+    
+    for education in educations:
+        output += f"""
+        \\item \\ressubheading{{{education.university()}}}{{{education.location()}}}{{{education.degree()}, {education.year_status()}, GPA: {education.gpa()}}}{{Expected graduation: {education.expected_graduation()}}}
         """
+    
+    output += f"""\\end{{description}}"""
 
-def _get_technical_skills() -> str:
-    coursework = "Supervised Machine Learning, Advanced Learning Algorithms (DeepLearning.AI)"
-    languages = ["Python", "Pandas", "Tensorflow", "Gensim", "LangChain", "Yfinance", "Huggingface", "C++", "SQL", "HTML"]
-    ml_algorithms = "Classification, Neural Networks, Text Embedding, Clustering"
-    tools = ["AWS (Bedrock, Glue, Lambda, DynamoDB, S3 Bucket)", "Sharepoint", "PowerApps", "Git"]
+        
 
-    return f"""
+    return output
+
+def _get_technical_skills(skills: list[history_class.skills]) -> str:
+    output = """
         \\vspace{{-1pt}}
         \\resheading{{Technical Skills}}
         \\vspace{{-12pt}}
 
         \\begin{{description}}
-        \\itemsep0em 
-            \\resitem{{\\textbf{{Coursework: }}}}{coursework}
-            \\resitem{{\\textbf{{Languages: }}}}{{{', '.join(languages)}}}
-            \\resitem{{\\textbf{{Machine Learning Algorithms: }}}}{ml_algorithms}
-            \\resitem{{\\textbf{{Tools: }}}}{{{', '.join(tools)}}}
-        \\end{{description}}
-        """
-
-def _get_work_experience() -> str:
-    internship_1_title = "Chatbot Developer Intern"
-    internship_1_company = "RenalWorks Pte Ltd, Malaysia"
-    internship_1_dates = "July 2024-September 2024"
-    internship_1_responsibilities = [
-        "Collaborated to develop a Claude 3 chatbot with SQL data retrieval and token tracking with LangGraph API, AWS DynamoDB and AWS Bedrock.",
-        "Innovatively optimized SQL query process for 500\% less token usage, enabled SQL function"
-    ]
-
-    internship_2_title = "Data Scientist Intern"
-    internship_2_company = "Ascentis CRM, Singapore"
-    internship_2_dates = "February 2024-July 2024"
-    internship_2_responsibilities = [
-        "Analyzed, prepared, researched and trained a text-based classification algorithm on 2 million data entries using AWS Glue and S3 Bucket.",
-        "Solved the optimization problem for algorithm to process 7 million data entries in 15 minutes with 80\% accuracy."
-    ]
-
-    internship_3_title = "Physics Tutor"
-    internship_3_company = "Kaizen Learning, Singapore"
-    internship_3_dates = "January 2024-August 2024"
-    internship_3_responsibilities = [
-        "Topped school in Physics HL: 92\%, International Baccalaureate Score: 44/45.",
-        "Delivered individualized tuition to 3 students, totaling 6 hours a week.",
-        "Catalyzed students' improvement from 8\% to 50\% in 2 months."
-    ]
-
-    internship_4_title = "Platoon Sergeant"
-    internship_4_company = "Singapore Armed Forces, Singapore"
-    internship_4_dates = "January 2022-November 2023"
-    internship_4_responsibilities = [
-        "Accomplished the Guards Conversion Course as one of the top 5 graduates. Promoted to 2nd Sergeant.",
-        "Motivated, led, and trained a platoon of 20 in the elite rapid deployment infantry formation (guards).",
-        "Spearheaded the revamp of a 300-page knowledge base. Conferred the title: Subject Matter Expert."
-    ]
-
-    internship_5_title = "Research Attachment"
-    internship_5_company = "Defence Science Organization, Singapore"
-    internship_5_dates = "October 2021-January 2022"
-    internship_5_responsibilities = [
-        "Spearheaded the comparison of two approaches to break quantum computer-resistant Lattice-based cryptography.",
-        "Achieved finalist in the Singapore Science and Engineering Fair (SSEF) with research paper."
-    ]
+        \\itemsep0em """
+    
+    for skill in skills:
+        output += f"""\\resitem{{\\textbf{{{skill.skill_category()}}}}}{', '.join(skill.skills_list())}"""
 
 
+    output += f"""\\end{{description}}"""
 
-    work_experiences = [[internship_1_title, internship_1_company, internship_1_dates, internship_1_responsibilities], 
-                        [internship_2_title, internship_2_company, internship_2_dates, internship_2_responsibilities],
-                        [internship_3_title, internship_3_company, internship_3_dates, internship_3_responsibilities],
-                        [internship_4_title, internship_4_company, internship_4_dates, internship_4_responsibilities],
-                        [internship_5_title, internship_5_company, internship_5_dates, internship_5_responsibilities]]
+    return output
 
-
+def _get_work_experience(work_experiences: list[history_class.experiences]) -> str:
     output = f"""
         \\vspace{{-5pt}}
         \\resheading{{Internships}}
@@ -179,33 +125,16 @@ def _get_work_experience() -> str:
     
     for experience in work_experiences:
         output += f"""
-            \\item \\singlesubheading{{\\textbf{{{experience[0]}}} \\textbar  \\textit{{{experience[1]}}}}}{{}}{{{experience[2]}}}
+            \\item \\singlesubheading{{\\textbf{{{experience.job_title()}}} \\textbar  \\textit{{{experience.company()}}}}}{{}}{{{experience.job_dates()}}}
                         \\begin{{itemize}}
-                            {"".join([f"\\resitem{{{item}}}" for item in experience[3]])}
+                            {"".join([f"\\resitem{{{bullet}}}" for perspective in experience.perspectives() for bullet in perspective.perspective_bullets()])}
                         \\end{{itemize}}
             """
 
     output += f"""\\end{{description}}"""
     return output
 
-def _get_awards() -> str:
-    award_1_title = "Undergraduate Research Fellow"
-    award_1_institution = "UC Irvine, California"
-    award_1_dates = "2024-2025"
-    award_1_responsibilities = [
-        "Awarded for research on the statistical distribution of distant galaxies to analyze the young universe."
-    ]
-
-    award_2_title = "Undergraduate Research Fellow"
-    award_2_institution = "UC Irvine, California"
-    award_2_dates = "2024-2025"
-    award_2_responsibilities = [
-        "Awarded for research on item classification algorithm based on text-embedding (natural language processing)."
-    ]
-
-    awards = [[award_1_title, award_1_institution, award_1_dates, award_1_responsibilities],
-              [award_2_title, award_2_institution, award_2_dates, award_2_responsibilities]]
-
+def _get_awards(awards: list[history_class.awards]) -> str:
     output = f"""
     \\vspace{{-5pt}}
     \\resheading{{Awards}}
@@ -215,10 +144,11 @@ def _get_awards() -> str:
     """
 
     for award in awards:
+        
         output += f"""
-            \\item \\singlesubheading{{\\textbf{{{award_1_title}}} \\textbar \\textit{{{award_1_institution}}}}}{{}}{{{award_1_dates}}}
+            \\item \\singlesubheading{{\\textbf{{{award.award_title()}}} \\textbar \\textit{{{award.institution()}}}}}{{}}{{{award.award_date()}}}
             \\begin{{itemize}}
-            {"".join([f"\\resitem{{{item}}}" for item in award_1_responsibilities])}
+            {"".join([f"\\resitem{{{item}}}" for item in award.award_description()])}
             \\end{{itemize}}
             """
         
@@ -232,18 +162,15 @@ def _compile_latex(latex_code: str) -> None:
 
     subprocess.run(["pdflatex", "-interaction=nonstopmode", latex_filename])
 
-print("PDF compilation completed!")
-
-
-def _generate_resume() -> None:
+def _generate_resume(history: history_class.history) -> None:
     """generates all resumes"""
     latex_code = ""
     latex_code += _get_preamble() 
-    latex_code += _get_contact_information()
-    latex_code += _get_education()
-    latex_code += _get_technical_skills()
-    latex_code += _get_work_experience()
-    latex_code += _get_awards()
+    latex_code += _get_contact_information(history.user_info())
+    latex_code += _get_education(history.education())
+    latex_code += _get_technical_skills(history.technical_skills())
+    latex_code += _get_work_experience(history.experiences())
+    latex_code += _get_awards(history.awards())
 
     latex_code += _get_postamble()
     _compile_latex(latex_code)
@@ -255,8 +182,8 @@ def _remove_latex_files() -> None:
         if os.path.exists(file):
             os.remove(file)
 
-def get_resume() -> bytes:
-    _generate_resume()
+def get_resume(history: history_class.history) -> bytes:
+    _generate_resume(history)
 
     with open("resume.pdf", "rb") as pdf_file:
         binary_data = pdf_file.read()
@@ -266,4 +193,67 @@ def get_resume() -> bytes:
 
 
 if __name__ == "__main__":
-    get_resume()
+    """sample history raw dict"""
+    sample = {
+        "user info": {
+            "name": "testName",
+            "email": "testemail@gmail.com",
+            "linkedin url": "https://www.linkedin.com/in/kierann-chong",
+            "personal url": "https://green-kiwie.github.io/Kierann\_Resume.github.io",
+            "contact_number": "(949) 822-4004"
+        },
+        "education": {
+            "school 1 (university name)": {
+                "location (city/country)": "California",
+                "degree": "BSc in Computer Science",
+                "year status": "Sophomore",
+                "expected graduation": "May 2027"
+            }
+        },
+        "technical skills": {
+            "skill category 1 (languages)": ["Python", "Pandas", "Tensorflow", "Gensim", "LangChain", "Yfinance", "Huggingface", "C++", "SQL", "HTML"],
+            "skill category 2 (tools)": ["AWS (Bedrock, Glue, Lambda, DynamoDB, S3 Bucket)", "Sharepoint", "PowerApps", "Git"]
+        },
+        "experiences": {
+            "arc 1 (job tile)": {
+                "company": "google",
+                "job dates": "July 2024-September 2024",
+                "perspectives": {
+                    "perspective": ["bullet 1", "bullet 2"],
+                    "perspective 2": ["bullet 1", "bullet 2"],
+                }
+            },
+            "arc 2 (job title)": {
+                "company": "disney",
+                "job dates": "July 2024-September 2024",
+                "perspectives": {
+                    "perspective": ["bullet 1", "bullet 2"],
+                    "perspective 2": ["bullet 1", "bullet 2"],
+                }
+            }
+        },
+        "awards":{
+            "award 1 (award title)": {
+                "institution": "UC Irvine, California",
+                "award date": "2024-2025",
+                "award description": [
+                    "Awarded for research on the statistical distribution of distant galaxies to analyze the young universe."
+                ]
+            },
+            "award 2 (award title)": {
+                "institution": "UC Irvine, California",
+                "award date": "2024-2025",
+                "award description": [
+                    "award!"
+                ]
+            }
+        }
+    }
+
+
+    hist = history_class.history(sample)
+    get_resume(hist)
+
+
+
+
