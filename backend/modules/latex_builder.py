@@ -295,7 +295,7 @@ if __name__ == "__main__":
 
     history1.merge_histories(history2)
 
-    get_resume(history1)
+    print(history1.jsonify())
 
 
 
