@@ -258,7 +258,7 @@ class history:
             count = 1
 
             if merge_education in new_history_json['education']:
-                while f'school {count} {merge_education}' in new_history_json['education']:
+                while f'school-{count}!]?.{merge_education}' in new_history_json['education']:
                     if merging_history_json['education']['degree'] == new_history_json['education']['degree']:
                         break
 
@@ -270,7 +270,7 @@ class history:
             count = 1
 
             if merge_skill in new_history_json['technical skills']:
-                while f'skill {count} {merge_skill}' in new_history_json['technical skills']:
+                while f'skill-{count}!]?.{merge_skill}' in new_history_json['technical skills']:
                     count += 1
                                 
             new_history_json['technical skills'][f'skill-{count}]!]?.{merge_skill}'] = merging_history_json['technical skills'][merge_skill]
