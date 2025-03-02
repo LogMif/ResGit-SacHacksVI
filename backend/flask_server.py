@@ -80,17 +80,17 @@ def flask_get_user_history() -> dict[str, int | str]:
 
     return rg.get_user_history(username, password)
 
-# @app.route("/generate_resume", methods=["POST"])
-# def flask_generate_resume() -> dict[str, int | str]:
-#     """api function generates resume with selected information"""
-#     warnings.filterwarnings("ignore")
-#     data = request.get_json()
+@app.route("/generate_resume", methods=["POST"])
+def flask_generate_resume() -> dict[str, int | str]:
+    """api function generates resume with selected information"""
+    warnings.filterwarnings("ignore")
+    data = request.get_json()
 
-#     username = data.get("username", "")
-#     password = data.get("password", "")
-#     selected_items = data.get("selected_data", "")
+    username = data.get("username", "")
+    password = data.get("password", "")
+    selected_items = data.get("selected_data", "")
 
-#     return rg.generate_resume(selected_items, username, password)
+    return rg.generate_resume(selected_items, username, password)
 
 
 
