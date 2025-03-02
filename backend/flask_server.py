@@ -9,17 +9,17 @@ import resgit_api as rg
 app = Flask(__name__)
 CORS(app)
 
-# @app.route("/add_to_history", methods=["POST"])
-# def flask_add_to_history() -> dict[str, int | str]:
-#     """api function merges current history with new added history"""
-#     warnings.filterwarnings("ignore")
-#     data = request.get_json()
+@app.route("/add_to_history", methods=["POST"])
+def flask_add_to_history() -> dict[str, int | str]:
+    """api function merges current history with new added history"""
+    warnings.filterwarnings("ignore")
+    data = request.get_json()
 
-#     new_history = data.get("new_history", "")
-#     username = data.get("username", "")
-#     password = data.get("password", "")
+    pdf_binary = data.get("pdf_binary", "")
+    username = data.get("username", "")
+    password = data.get("password", "")
 
-#     return rg.add_user_history(new_history, "", "")
+    return rg.add_user_history(pdf_binary, username, password)
 
 @app.route("/create_user", methods=["POST"])
 def flask_create_user() -> dict[str, int | str]:
@@ -93,6 +93,17 @@ def flask_generate_resume() -> dict[str, int | str]:
 
     return rg.generate_resume(selected_items, username, password, resume_name)
 
+@app.route("/get_ai_recommendation", methods=["POST"])
+def flask_get_ai_recommendation() -> dict[str, int | str]:
+    """api function generates resume with selected information"""
+    warnings.filterwarnings("ignore")
+    data = request.get_json()
+
+    username = data.get("username", "")
+    password = data.get("password", "")
+    job_link = data.get("job_link", "")
+
+    return rg.get_ai_recommendation(job_link, username, password)
 
 
 if __name__ == '__main__':

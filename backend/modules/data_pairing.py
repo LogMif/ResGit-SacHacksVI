@@ -141,7 +141,7 @@ def parse_pdf_text_to_history(pdf_text: str) -> dict:
 
 
 
-def get_history_ranking(job_summary: str, history: dict) -> list[(str, str)]:
+def get_history_recommendation(job_summary: str, history: dict) -> list[(str, str)]:
     """
     Using the given job summary and history, return a list-ranking
     of history perspectives by relevance to the job summary.
@@ -246,7 +246,7 @@ if __name__ == "__main__":
             }
         }
     }
-    print(get_history_ranking(job_scrapper.ai_summarize_job('https://www.linkedin.com/jobs/view/sr-administrative-assistant-at-linkedin-4168614516?trk=public_jobs_topcard-title'), history(sample).jsonify()))
+    print(get_history_recommendation(job_scrapper.ai_summarize_job('https://www.linkedin.com/jobs/view/sr-administrative-assistant-at-linkedin-4168614516?trk=public_jobs_topcard-title'), history(sample).jsonify()))
 
     # print(parse_pdf_text_to_history('''Logan Mifflin 24510 Arroyo Dr., Irvine, CA 92617 | Email: logan.mifflin@gmail.com | Cell: (760)-223-9085 EDUCATION
     # University of California, Irvine
