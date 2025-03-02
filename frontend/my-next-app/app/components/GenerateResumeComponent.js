@@ -38,8 +38,9 @@
 import {useEffect, useState} from "react";
 import Image from "next/image";
 import Cookies from "js-cookie";
-import {decryptData, encryptData} from "@/app/config";
+import {decryptData} from "@/app/config";
 import SaveNewResumePopupComponent from "@/app/components/SaveNewResumePopupComponent"
+import ReactMarkdown from "react-markdown";
 
 
 // JSON Data
@@ -193,16 +194,13 @@ export default function GenerateResumeComponent({ selectedResume }) {
     return (
         <div className="flex w-full h-full">
             <div className="flex-1 bg-white h-full">
-                {responseAI && <pre className="mt-4 p-3 bg-gray-200 rounded-lg">{JSON.stringify(responseAI, null, 2)}</pre>}
-                {error && <p className="text-red-500">{error}</p>}
-                <div className="grid grid-cols-[20%_60%_20%] text-center h-full">
-                    {/* Left Button (CANCEL) */}
+                <div className="grid grid-cols-[30%_55%_15%] text-center h-full">
                     <div className="flex items-center justify-center h-full">
-                        <div className="w-full m-8 bg-gray-100 rounded-md overflow-auto p-5" style={{ height: "calc(100vh - 80px)" }}>
+                        <div className=" mr-4 bg-gray-100 rounded-md overflow-auto" style={{ height: "calc(100vh - 80px)" }}>
                             <input
                                 type="text"
                                 placeholder="Link to job"
-                                className="w-full mb-3 p-2 border rounded text-black bg-white"
+                                className="mt-4 mb-3 p-2 py-2 border rounded text-black bg-white"
                                 value={link_to_job}
                                 onChange={(e) => setLinkToJob(e.target.value)}
                             />
@@ -212,14 +210,17 @@ export default function GenerateResumeComponent({ selectedResume }) {
                                 onClick={sendAIData}
                                 disabled={loadingAI}
                             >
-                                {loadingAI ? "AI Loading..." : "Ask AI"}
+                                {loadingAI ? "Thinking.." : "Ask AI"}
                             </button>
-
-                            <textarea
-                                value={responseAI}
-                                readOnly={true}
-                            ></textarea>
-
+                            <div className="bg-gray-100 w-full h-[80%] overflow-auto break-all mt-4">
+                                {responseAI ? (
+                                    <div className="max-w-full w-full break-words overflow-auto p-2 py-4">
+                                        <ReactMarkdown>{responseAI}</ReactMarkdown>
+                                    </div>
+                                ) : (
+                                    <p className="text-gray-500">No AI response yet.</p>
+                                )}
+                            </div>
                         </div>
                     </div>
 

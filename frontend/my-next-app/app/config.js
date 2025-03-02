@@ -1,7 +1,7 @@
 import CryptoJS from "crypto-js";
 import 'dotenv/config'
 
-export const BASE_URL = "https://80e9-76-78-137-88.ngrok-free.app/";
+export const BASE_URL = "https://ad71-76-78-137-88.ngrok-free.app/";
 export const SECRET_KEY = 'ekLKGgheI-GLEShglsa';
 
 export const decryptData = (encryptedData) => {
