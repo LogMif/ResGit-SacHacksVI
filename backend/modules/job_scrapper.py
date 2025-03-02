@@ -22,10 +22,12 @@ def _scrape_webpage(url: str) -> BeautifulSoup:
         print('Failed to open.')
 
 
-def _ai_summarize_job(page_text: str) -> str:
+def ai_summarize_job(url: str) -> str:
     """
     Takes a webpage's content and parses it down to the first job's description.
     """
+    page_text = _scrape_webpage(url)
+
     bedrock_client = boto3.client(
         service_name = 'bedrock-runtime',
         region_name = os.getenv('AWS_REGION')
@@ -63,13 +65,3 @@ def _ai_summarize_job(page_text: str) -> str:
     generated_text = ai_response['output']['message']['content'][0]['text']
 
     return generated_text
-
-
-def ai_job_summary(url: str) -> str:
-    """
-    Scrapes the given job page and passes the response to 
-    an Amazon LLM, which parses the page for the job description.
-    """
-    page_text  = _scrape_webpage(url)
-
-    return _ai_summarize_job(page_text)

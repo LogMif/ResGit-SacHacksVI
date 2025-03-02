@@ -188,23 +188,23 @@ class awards:
 
 class history:
     def __init__(self, history_raw_dict: dict):
-        try:
+        if 'user info' in history_raw_dict:
             self._user_info = user_info(history_raw_dict["user info"])
-            self._education = [education(education_dict, institution) \
-                               for institution, education_dict in \
-                                history_raw_dict["education"].items()]
-            self._technical_skills = [skills(skills_list, skill_category) \
-                                      for skill_category, skills_list in \
-                                        history_raw_dict["technical skills"].items()]
-            self._experiences = [experiences(experience_dict, job_title) \
-                                      for job_title, experience_dict in \
-                                        history_raw_dict["experiences"].items()]
-            self._awards = [awards(award_dict, award_title) \
-                            for award_title, award_dict in \
-                                history_raw_dict["awards"].items()]
-
-        except Exception as e:
-            raise ValueError(f"invalid history dict, {str(e)}")
+        else:
+            self._user_info = None
+        self._education = [education(education_dict, institution) \
+                            for institution, education_dict in \
+                            history_raw_dict["education"].items()]
+        self._technical_skills = [skills(skills_list, skill_category) \
+                                    for skill_category, skills_list in \
+                                    history_raw_dict["technical skills"].items()]
+        self._experiences = [experiences(experience_dict, job_title) \
+                                    for job_title, experience_dict in \
+                                    history_raw_dict["experiences"].items()]
+        self._awards = [awards(award_dict, award_title) \
+                        for award_title, award_dict in \
+                            history_raw_dict["awards"].items()]
+        
         
     def education(self) -> list[education]:
         return self._education
@@ -220,6 +220,26 @@ class history:
     
     def awards(self) -> list[awards]:
         return self._awards
+    
+    def merge_histories(self, merging_history: 'history') -> 'history':
+        """
+        Merges the two histories, adding arcs if they do not exist in the original history,
+        or just their perspectives to the existing arcs.
+        """
+        new_history = self.jsonify()
+
+        for merge_education in self.education():
+            for original_education in self.education():
+                merge_university_name = merge_education.university().split(' ', 2)
+
+                
+
+                if merge_education.university() != original_education.university():
+                    new_history['education'][merge_education.university()] = merge_education.jsonify()
+                elif merge_education.degree() != original_education.degree():
+                    new_history['education'][f'school {merge_university_name}']
+        
+        return history
 
     def jsonify(self) -> dict:
         output = dict()
