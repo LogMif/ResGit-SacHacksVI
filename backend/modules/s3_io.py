@@ -1,7 +1,11 @@
 import boto3
 import json
 
+import dotenv
+
 import boto3.exceptions
+
+dotenv.load_dotenv('../.env')
 
 class FailedUserAuthError(Exception):
     def __init__(self, user_exists: bool):
@@ -75,6 +79,22 @@ def create_history(bucket: str, user_name: str, password: str, history: dict) ->
         s3_client.put_object(Bucket = bucket, Key = f'{user_name}/history.json', Body = json.dumps(history))
 
 
+def get_all_generated_resume_names(bucket: str, user_name: str, password: str) -> list[str]:
+    """
+    Gets the names of all of the previously generated resume's for the user.
+    """
+    with auth_user(bucket, user_name, password) as s3_client:
+        generated_resume_objects = s3_client.list_objects(Bucket = bucket, Prefix = f'{user_name}/', Delimiter='/')
+
+        generated_resumes_list = []
+
+        for generated_resume_object in generated_resume_objects['Contents']: 
+            if generated_resume_object['Key'].endswith('.pdf'):
+                generated_resumes_list.append(generated_resume_object['Key'][len(user_name) + 1:])
+
+        return generated_resumes_list
+
+
 def get_generated_resume(bucket: str, user_name: str, password: str, resume_name: str) -> bytes:
     """
     Gets a generated resume from the given user.
@@ -140,3 +160,6 @@ def auth_user(bucket: str, user_name: str, password: str) -> S3Client:
             raise FailedUserAuthError(True)
 
         return S3Client()
+    
+
+print(get_all_generated_resume_names('resgit-bucket', 'Boo', 'Password123'))
