@@ -60,12 +60,12 @@ export default function SidebarComponent({ setSelectedResume, onGenerateNew, onS
 
     return (
         <div className="text-black w-full h-full p-6">
-            <h2
-                className="text-2xl font-bold mb-4 cursor-pointer"
-                onClick={handleHistoryClick}
-            >History</h2>
-
-            <div className="border-b border-gray-600 mb-4"></div>
+            <div className='bg-white rounded-2xl p-2 mb-2 w-auto self-center py-4 px-8 hover:bg-gray-300'>
+                <h2
+                    className="text-2xl font-bold cursor-pointer"
+                    onClick={handleHistoryClick}
+                >History</h2>
+            </div>
 
             {resumeList.length > 0 ? (
                 <>
@@ -87,9 +87,9 @@ export default function SidebarComponent({ setSelectedResume, onGenerateNew, onS
 
             <button
                 onClick={onGenerateNew}
-                className="button-blue mt-2 p-2 rounded text-white"
+                className="button-blue mt-2 p-2 rounded text-white text-xl font-bold py-2 px-4"
             >
-                Generate New Resume
+                New Resume
             </button>
 
             {error && <p className="text-red-500 mt-4">{error}</p>}

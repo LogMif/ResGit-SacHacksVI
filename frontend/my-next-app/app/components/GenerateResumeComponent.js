@@ -38,7 +38,8 @@
 import {useEffect, useState} from "react";
 import Image from "next/image";
 import Cookies from "js-cookie";
-import {decryptData} from "@/app/config";
+import {decryptData, encryptData} from "@/app/config";
+import SaveNewResumePopupComponent from "@/app/components/SaveNewResumePopupComponent"
 
 
 // JSON Data
@@ -88,9 +89,11 @@ const resumeData = {
 };
 
 export default function GenerateResumeComponent({ selectedResume }) {
-    const [responseData, setResponseData] = useState(null);
     const [error, setError] = useState(null);
     const [userSession, setUserSession] = useState(null);
+    const [link_to_job, setLinkToJob] = useState("");
+    const [loadingAI, setLoadingAI] = useState(false);
+    const [responseAI, setResponseAI] = useState("");
 
     useEffect(() => {
         const encryptedSession = Cookies.get("userSession");
@@ -100,106 +103,19 @@ export default function GenerateResumeComponent({ selectedResume }) {
         }
     }, []);
 
-    async function sendData() {
+    async function sendAIData() {
         try {
             const { username, password } = userSession;
+            setLoadingAI(true);
 
-            const res = await fetch('/api/generateResume', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(
-                    {
-                        username: username,
-                        password: password,
-                        resume_name: "resume 1",
-                        selected_data : {
-
-                                "user info": {
-                                    "name": "testName",
-                                    "email": "testemail@gmail.com",
-                                    "linkedin url": "https://www.linkedin.com/in/kierann-chong/",
-                                    "personal url": "https://green-kiwie.github.io/Kierann////_Resume.github.io/",
-                                    "contact_number": "(949) 822-4004"
-                                },
-                                "education": {
-                                    "school 1 (university name)": {
-                                        "location (city/country)": "California",
-                                        "degree": "BSc in Computer Science",
-                                        "year status": "Sophomore",
-                                        "expected graduation": "May 2027",
-                                        "gpa": "3.9"
-                                    }
-                                },
-                                "technical skills": {
-                                    "skill category 1 (languages)": [
-                                        "Python",
-                                        "Pandas",
-                                        "Tensorflow",
-                                        "Gensim",
-                                        "LangChain",
-                                        "Yfinance",
-                                        "Huggingface",
-                                        "C++",
-                                        "SQL",
-                                        "HTML"
-                                    ],
-                                    "skill category 2 (tools)": [
-                                        "AWS (Bedrock, Glue, Lambda, DynamoDB, S3 Bucket)",
-                                        "Sharepoint",
-                                        "PowerApps",
-                                        "Git"
-                                    ]
-                                },
-                                "experiences": {
-                                    "arc 1 (job tile)": {
-                                        "company": "google",
-                                        "job dates": "July 2024-September 2024",
-                                        "perspectives": {
-                                            "perspective": [
-                                                "bullet 1",
-                                                "bullet 2"
-                                            ],
-                                            "perspective 2": [
-                                                "bullet 1",
-                                                "bullet 2"
-                                            ]
-                                        }
-                                    },
-                                    "arc 2 (job title)": {
-                                        "company": "disney",
-                                        "job dates": "July 2024-September 2024",
-                                        "perspectives": {
-                                            "perspective": [
-                                                "bullet 1",
-                                                "bullet 2"
-                                            ],
-                                            "perspective 2": [
-                                                "bullet 1",
-                                                "bullet 2"
-                                            ]
-                                        }
-                                    }
-                                },
-                                "awards": {
-                                    "award 1 (award title)": {
-                                        "institution": "UC Irvine, California",
-                                        "award date": "2024-2025",
-                                        "award description": [
-                                            "Awarded for research on the statistical distribution of distant galaxies to analyze the young universe."
-                                        ]
-                                    },
-                                    "award 2 (award title)": {
-                                        "institution": "UC Irvine, California",
-                                        "award date": "2024-2025",
-                                        "award description": [
-                                            "award!"
-                                        ]
-                                    }
-                                }
-                            }
-                        }
-
-                )
+            const res = await fetch("/api/AIRecommend", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    username: username,
+                    password: password,
+                    job_link: link_to_job,
+                })
             });
 
             if (!res.ok) {
@@ -207,9 +123,14 @@ export default function GenerateResumeComponent({ selectedResume }) {
             }
 
             const data = await res.json();
-            setResponseData(data);
+
+            setResponseAI(JSON.parse(data["data"]["body"])["ai_recommendation"]);
         } catch (err) {
+            console.error("Error:", err.message);
             setError(err.message);
+        }
+        finally {
+            setLoadingAI(false);
         }
     }
 
@@ -242,72 +163,64 @@ export default function GenerateResumeComponent({ selectedResume }) {
         }, {})
     });
 
-    const toggleExperience = (job) => {
-        setCheckedStates((prev) => {
-            const isCurrentlySelected = prev.experiences[job].selected;
-
-            return {
-                ...prev,
-                experiences: {
-                    ...prev.experiences,
-                    [job]: {
-                        selected: !isCurrentlySelected,
-                        perspectives: Object.keys(prev.experiences[job].perspectives).reduce(
-                            (persAcc, perspective) => {
-                                persAcc[perspective] = !isCurrentlySelected; // Match experience state
-                                return persAcc;
-                            },
-                            {}
-                        )
-                    }
-                }
-            };
-        });
-    };
-
     const togglePerspective = (job, perspective) => {
         setCheckedStates((prev) => {
+            const prevExperience = prev.experiences[job];
+            const newPerspectiveState = !prevExperience.perspectives[perspective];
+
+            // If toggling ON a single perspective, make sure the experience itself is OFF
+            const isExperienceSelected = prevExperience.selected;
+            const perspectivesUpdated = {
+                ...prevExperience.perspectives,
+                [perspective]: newPerspectiveState
+            };
+
+            const anyPerspectiveSelected = Object.values(perspectivesUpdated).some((v) => v);
+
             return {
                 ...prev,
                 experiences: {
                     ...prev.experiences,
                     [job]: {
-                        ...prev.experiences[job],
-                        perspectives: {
-                            ...prev.experiences[job].perspectives,
-                            [perspective]: !prev.experiences[job].perspectives[perspective]
-                        }
+                        selected: anyPerspectiveSelected,
+                        perspectives: perspectivesUpdated
                     }
                 }
             };
         });
     };
-    //
-    // const togglePerspective = (job, perspective) => {
-    //     setCheckedStates((prev) => ({
-    //         ...prev,
-    //         experiences: {
-    //             ...prev.experiences,
-    //             [job]: {
-    //                 ...prev.experiences[job],
-    //                 perspectives: {
-    //                     ...prev.experiences[job].perspectives,
-    //                     [perspective]: !prev.experiences[job].perspectives[perspective]
-    //                 }
-    //             }
-    //         }
-    //     }));
-    // };
 
     return (
         <div className="flex w-full h-full">
             <div className="flex-1 bg-white h-full">
+                {responseAI && <pre className="mt-4 p-3 bg-gray-200 rounded-lg">{JSON.stringify(responseAI, null, 2)}</pre>}
+                {error && <p className="text-red-500">{error}</p>}
                 <div className="grid grid-cols-[20%_60%_20%] text-center h-full">
                     {/* Left Button (CANCEL) */}
                     <div className="flex items-center justify-center h-full">
-                        <button className="text-white font-bold button-blue justify-center py-4 px-12 rounded-xl">
-                            CANCEL
-                        </button>
+                        <div className="w-full m-8 bg-gray-100 rounded-md overflow-auto p-5" style={{ height: "calc(100vh - 80px)" }}>
+                            <input
+                                type="text"
+                                placeholder="Link to job"
+                                className="w-full mb-3 p-2 border rounded text-black bg-white"
+                                value={link_to_job}
+                                onChange={(e) => setLinkToJob(e.target.value)}
+                            />
+
+                            <button
+                                className="text-white font-bold button-blue justify-center py-4 px-12 rounded-xl"
+                                onClick={sendAIData}
+                                disabled={loadingAI}
+                            >
+                                {loadingAI ? "AI Loading..." : "Ask AI"}
+                            </button>
+
+                            <textarea
+                                value={responseAI}
+                                readOnly={true}
+                            ></textarea>
+
+                        </div>
                     </div>
 
                     {/* Main Section */}
@@ -397,7 +310,7 @@ export default function GenerateResumeComponent({ selectedResume }) {
                                             ? "shadow-[inset_-2px_-2px_6px_rgba(0,0,0,0.2)] border-green-600"
                                             : "drop-shadow-lg border-gray-400"
                                     }`}
-                                    onClick={() => toggleExperience(job)}
+                                    onClick={() => {}}
                                 >
                                     <div className="flex justify-between items-center">
                                         <div className="flex-1">
@@ -498,14 +411,11 @@ export default function GenerateResumeComponent({ selectedResume }) {
                         ))}
                     </div>
 
-                    {/* Right Button (SAVE) */}
                     <div className="flex items-center justify-center h-full">
-                        <button
-                            className="text-white font-bold button-blue justify-center py-4 px-12 rounded-xl"
-                            onClick={sendData}
-                        >
-                            SAVE
-                        </button>
+                        <div className="flex items-center justify-center h-full flex-col">
+                            <SaveNewResumePopupComponent />
+                            <br />
+                        </div>
                     </div>
                 </div>
             </div>

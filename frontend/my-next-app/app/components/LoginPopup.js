@@ -87,13 +87,13 @@ export default function LoginPopup() {
         <div>
             <button
                 onClick={() => setIsOpen(true)}
-                className="px-12 py-3 text-black rounded-lg cursor-pointer text-3xl font-bold"
+                className="px-12 py-3 text-black rounded-lg cursor-pointer text-2xl font-bold"
             >
                 Login
             </button>
 
             {isOpen && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-20">
+                <div className="fixed inset-0 flex items-center justify-center" style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
                     <div className="bg-white p-6 rounded-lg shadow-lg w-96">
                         <h2 className="text-xl font-bold mb-4">Login</h2>
                         <input

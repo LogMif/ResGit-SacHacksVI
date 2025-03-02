@@ -39,14 +39,14 @@ export default function NavComponent() {
             <div className="flex items-center justify-between p-4 max-w-screen-2xl mx-auto">
                 {userSession ? (
                     <Image
-                        src="/logo.svg"
-                        alt="Hero Image" width={30} height={30}
+                        src="/logo.jpg"
+                        alt="Logo Image" width={50} height={50}
                         onClick={goToResumeView}
                     />
                     ) : (
                     <Image
-                        src="/logo.svg"
-                        alt="Hero Image" width={30} height={30}
+                        src="/logo.jpg"
+                        alt="Hero Image" width={50} height={50}
                         onClick={goToHome}
                     />
                     )}
