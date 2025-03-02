@@ -68,11 +68,10 @@ def get_resume_pdf(bucket, username: str, password: str, resume_name: str) -> di
     
     return {"resume": encoded_binary}
 
-# @flask_function
-# def get_user_history(bucket, username: str, password: str) -> dict:
-#     #read user history code here
-#     current_history = ""
-#     return {"history": current_history}
+@flask_function
+def get_user_history(bucket, username: str, password: str) -> dict:
+    current_history = s3.get_history(bucket, username, password)
+    return {"history": current_history}
 
 # @flask_function
 # def generate_resume(bucket, selected_history: dict, username: str, password: str) -> dict:

@@ -93,12 +93,10 @@ def _get_education(educations: list[history_class.education]) -> str:
     
     output += f"""\\end{{description}}"""
 
-        
-
     return output
 
 def _get_technical_skills(skills: list[history_class.skills]) -> str:
-    output = """
+    output = f"""
         \\vspace{{-1pt}}
         \\resheading{{Technical Skills}}
         \\vspace{{-12pt}}

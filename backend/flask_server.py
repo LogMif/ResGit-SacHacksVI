@@ -69,16 +69,16 @@ def flask_get_resume_pdf() -> dict[str, int | str]:
     response = rg.get_resume_pdf(username, password, resume_name)
     return response
 
-# @app.route("/get_user_history", methods=["POST"])
-# def flask_get_user_history() -> dict[str, int | str]:
-#     """api function returns user history"""
-#     warnings.filterwarnings("ignore")
-#     data = request.get_json()
+@app.route("/get_user_history", methods=["POST"])
+def flask_get_user_history() -> dict[str, int | str]:
+    """api function returns user history"""
+    warnings.filterwarnings("ignore")
+    data = request.get_json()
 
-#     username = data.get("username", "")
-#     password = data.get("password", "")
+    username = data.get("username", "")
+    password = data.get("password", "")
 
-#     return rg.get_user_history(username, password)
+    return rg.get_user_history(username, password)
 
 # @app.route("/generate_resume", methods=["POST"])
 # def flask_generate_resume() -> dict[str, int | str]:
