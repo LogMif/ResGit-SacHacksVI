@@ -1,6 +1,8 @@
 import boto3
 import os
 import dotenv
+import job_scrapper
+from history_class import history
 
 dotenv.load_dotenv('../.env')
 
@@ -153,13 +155,11 @@ def get_history_ranking(job_summary: str, history: dict) -> list[(str, str)]:
     model_id = 'amazon.nova-lite-v1:0'
 
     prompt = f'''
-            Comparing the following job description with the following dictionary's deepest values,
-            return only a list of lists that are ordered in the most relavent dictionary values to the job description
-            to the least relavent dictionary values to the job description: 
-            Job Summary: {job_summary}\n\n
-            Dictionary: {history}
-
-            '''
+            You are given a dictionary of items to pick to add to a resume. 
+            The resume must be tailored to the job and you are to highlight the most important items to pick from the dictionary. 
+            Be as succinct as possible. 
+            Here is the job summary: {job_summary}
+            Here is the dictionary: {history}'''
 
 
     ai_response = bedrock_client.converse(
@@ -175,7 +175,7 @@ def get_history_ranking(job_summary: str, history: dict) -> list[(str, str)]:
         ],
         inferenceConfig = {
             'maxTokens': 2048,
-            'temperature': 0,
+            'temperature': 0.01,
             'topP': 1,
             'stopSequences': [
                 'string'
@@ -187,106 +187,109 @@ def get_history_ranking(job_summary: str, history: dict) -> list[(str, str)]:
 
     return generated_text
 
-# history = """{
-#     "user info": {
-#         "name": my_name,
-#         "email": my_email,
-#         "linkedin url": some_linked_in_link,
-#         "personal url": some_extra_link_if_it_exists,
-#         "contact_number": the_provided_number_if_applicable
-#     },
-#     "education": {
-#         some university name: {
-#             "location (city/country)": some location,
-#             "degree": the degree on the resume,
-#             "year status": the stated year status at the university,
-#             "expected graduation": stated graduation month and year
-#         }
-#         ...
-#     },
-#     "technical skills": {
-#         skill category: A list that corresponds with this category of skills found on the resume,
-#         skill category 2: Another list, but that corresponds with with category of skills found on the resume
-#         ...
-#     },
-#     "experiences": {
-#         A job tile: {
-#             "company": The first company on the resume,
-#             "job dates": timeframe worked at the company,
-#             "perspective": [the first bullet point, the second bullet point, ...]
-#         },
-#         Another job title: {
-#             "company": The second company on the resume,
-#             "job dates": timeframe worked at this company,
-#             "perspective": [the first bullet point for this job, the second bullet point, ...]
-#             }
-#         }
-#         ...
-#     },
-#     "awards":{
-#         The first award on the resume: {
-#             "institution": The issuer of the award on the resume,
-#             "award date": the date the award was issued,
-#             "award description": [
-#                 Text from the first award's description.
-#             ]
-#         },
-#         The second award on the resume: {
-#             "institution": The issuer of this award on the resume,
-#             "award date": The date this award was issued,
-#             "award description": [
-#                 Text from the second award's description.
-#             ]
-#         }
-#         ...
-#     }
-# }"""
+
 
 if __name__ == "__main__":
-    print(parse_pdf_text_to_history('''Logan Mifflin 24510 Arroyo Dr., Irvine, CA 92617 | Email: logan.mifflin@gmail.com | Cell: (760)-223-9085 EDUCATION
-    University of California, Irvine
-        B.S. in Computer Science
-    Sept. 2024 - ONGOING
-    GPA: 4.00
-    Mt. San Jacinto College
-        A.S. in Computer Science for Transfer
-        A.S. in Mathematics for Transfer
-        A.A. in Mathematics and Science
+    sample = {
+        "user info": {
+            "name": "my_name",
+            "email": "my_email",
+            "linkedin url": "some_linked_in_link",
+            "personal url": "some_extra_link_if_it_exists",
+            "contact_number": "the_provided_number_if_applicable"
+        },
+        "education": {
+            "some university name": {
+                "location (city/country)": "some location",
+                "degree": "the degree on the resume",
+                "year status": "the stated year status at the university",
+                "expected graduation": "stated graduation month and year"
+            }
+        },
+        "technical skills": {
+            "skill category": "A list that corresponds with this category of skills found on the resume",
+            "skill category 2": "Another list, but that corresponds with with category of skills found on the resume"
+        },
+        "experiences": {
+            "A job tile": {
+                "company": "The first company on the resume",
+                "job dates": "timeframe worked at the company",
+                "perspectives":{
+                    "perspective 1": ["the first bullet point", "the second bullet point"],
+                    "perspective 2": ["another bullet point", "next bullet point"]
+                }
+            },
+            "Another job title": {
+                "company": "The second company on the resume",
+                "job dates": "timeframe worked at this company",
+                "perspectives":{
+                    "perspective 1": ["the first bullet point", "the second bullet point"],
+                    "perspective 2": ["another bullet point", "next bullet point"]
+                }
+            }
+        },
+        "awards":{
+            "The first award on the resume": {
+                "institution": "The issuer of the award on the resume",
+                "award date": "the date the award was issued",
+                "award description": [
+                    "Text from the first award's description."
+                ]
+            },
+            "The second award on the resume": {
+                "institution": "The issuer of this award on the resume",
+                "award date": "The date this award was issued",
+                "award description": [
+                    "Text from the second award's description."
+                ]
+            }
+        }
+    }
+    print(get_history_ranking(job_scrapper.ai_summarize_job('https://www.linkedin.com/jobs/view/sr-administrative-assistant-at-linkedin-4168614516?trk=public_jobs_topcard-title'), history(sample).jsonify()))
 
-    May 2024
-    GPA: 3.92
+    # print(parse_pdf_text_to_history('''Logan Mifflin 24510 Arroyo Dr., Irvine, CA 92617 | Email: logan.mifflin@gmail.com | Cell: (760)-223-9085 EDUCATION
+    # University of California, Irvine
+    #     B.S. in Computer Science
+    # Sept. 2024 - ONGOING
+    # GPA: 4.00
+    # Mt. San Jacinto College
+    #     A.S. in Computer Science for Transfer
+    #     A.S. in Mathematics for Transfer
+    #     A.A. in Mathematics and Science
 
-        Relevant Coursework: Data Structures & Algorithms, Discrete Structures, Linear Algebra, Differential 
-            Equations.
+    # May 2024
+    # GPA: 3.92
 
-    TECHNICAL SKILLS
-        Programming Languages: C++, C#, Java, Javascript, Python, HTML, SQL, Assembly
-        Operating Systems: Windows (11, 10, 7), Linux (Mint, CentOS)
-        Software Proficiencies: Git, Github Desktop
+    #     Relevant Coursework: Data Structures & Algorithms, Discrete Structures, Linear Algebra, Differential 
+    #         Equations.
 
-    PROJECTS
-    FastFoodComparer
-    Full Stack Developer
-    Tech Used: HTML, CSS, ReactJS, NodeJS, Python, SQLite, Beautifulsoup
-    July 2024 - August 2024
+    # TECHNICAL SKILLS
+    #     Programming Languages: C++, C#, Java, Javascript, Python, HTML, SQL, Assembly
+    #     Operating Systems: Windows (11, 10, 7), Linux (Mint, CentOS)
+    #     Software Proficiencies: Git, Github Desktop
 
-    Created a React web application which filters and ranks 10,000s of fast food items based on chosen macronutrient comparisons.
-    Implemented an efficient NodeJS server to service clients who use the React web application with requested fast food items from an SQLite database.
-    Scraped and parsed fast food item data from fast food websites with Beautifulsoup into an SQLite database.
-    PeriodicTable
-    Independent Developer
-    Tech Used: C++
-    May 2023
+    # PROJECTS
+    # FastFoodComparer
+    # Full Stack Developer
+    # Tech Used: HTML, CSS, ReactJS, NodeJS, Python, SQLite, Beautifulsoup
+    # July 2024 - August 2024
 
-    Developed a console application that parses a CSV file into an AVL tree that is used by the client to query for elements based on either their atomic number or their name.
-    Efficiently stored the data using an AVL tree and called for data using depth and breadth first searches, making the queries fast for user experience.
-    EbayInventory
-    Solo Developer
-    Tech Used: Java, JavaFX, Ebay RESTful API 
-    March 2022 - May 2022
+    # Created a React web application which filters and ranks 10,000s of fast food items based on chosen macronutrient comparisons.
+    # Implemented an efficient NodeJS server to service clients who use the React web application with requested fast food items from an SQLite database.
+    # Scraped and parsed fast food item data from fast food websites with Beautifulsoup into an SQLite database.
+    # PeriodicTable
+    # Independent Developer
+    # Tech Used: C++
+    # May 2023
 
-    Developed a GUI application to display a client’s 1000+ Ebay listings with certain data about the listings and filtering functionality, allowing the client to make well-informed decisions on their current listings.
-    Wrote design documentation and responded quickly to client needs and required dynamic modifications, implementing requests into the software’s development.
-    Used UX design principles to develop an intuitive and easy-to-read interface for the client to interact with.
-    '''))
-#print(get_history_ranking(job_scrapper.ai_summarize_job('https://www.linkedin.com/jobs/view/sr-administrative-assistant-at-linkedin-4168614516?trk=public_jobs_topcard-title'), history))
+    # Developed a console application that parses a CSV file into an AVL tree that is used by the client to query for elements based on either their atomic number or their name.
+    # Efficiently stored the data using an AVL tree and called for data using depth and breadth first searches, making the queries fast for user experience.
+    # EbayInventory
+    # Solo Developer
+    # Tech Used: Java, JavaFX, Ebay RESTful API 
+    # March 2022 - May 2022
+
+    # Developed a GUI application to display a client’s 1000+ Ebay listings with certain data about the listings and filtering functionality, allowing the client to make well-informed decisions on their current listings.
+    # Wrote design documentation and responded quickly to client needs and required dynamic modifications, implementing requests into the software’s development.
+    # Used UX design principles to develop an intuitive and easy-to-read interface for the client to interact with.
+    # '''))

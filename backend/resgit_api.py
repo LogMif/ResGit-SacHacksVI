@@ -86,15 +86,14 @@ def get_user_history(bucket, username: str, password: str) -> dict:
     return {"history": current_history}
 
 @flask_function
-def generate_resume(bucket, selected_history: str, username: str, password: str) -> dict:
-    print(type(selected_history))
-    print(selected_history)
-    
+def generate_resume(bucket, selected_history: str, username: str, password: str, resume_name: str) -> dict:
+   
     hist = history_class.history(selected_history)
     generated_resume_binary = lb.get_resume(hist)
 
-    s3.store_generated_resume(bucket, username, password, generated_resume_binary)
     encoded_binary = base64.b64encode(generated_resume_binary).decode("utf-8")
+    s3.store_generated_resume(bucket, username, password, resume_name, generated_resume_binary)
+   
     return {"resume": encoded_binary}
 
 

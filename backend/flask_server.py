@@ -89,8 +89,9 @@ def flask_generate_resume() -> dict[str, int | str]:
     username = data.get("username", "")
     password = data.get("password", "")
     selected_items = data.get("selected_data", "")
+    resume_name = data.get("resume_name", "")
 
-    return rg.generate_resume(selected_items, username, password)
+    return rg.generate_resume(selected_items, username, password, resume_name)
 
 
 
