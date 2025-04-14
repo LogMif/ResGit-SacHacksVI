@@ -41,7 +41,7 @@ def flask_function(func: callable) -> dict[str, int | str]:
     return executable
 
 @flask_function
-def add_user_history(bucket, pdf_binary: dict, username: str, password: str) -> dict:
+def add_user_history(bucket, pdf_binary: bytes, username: str, password: str) -> dict:
     return rgapi.add_user_history(bucket, pdf_binary, username, password)
     
 @flask_function
@@ -51,7 +51,6 @@ def get_ai_recommendation(bucket, job_link: str, username: str, password: str) -
 @flask_function
 def add_user(bucket, username: str, password: str) -> dict:
     return rgapi.add_user(bucket, username, password)
-    
 
 @flask_function
 def authenticate_user(bucket, username: str, password: str) -> dict:
