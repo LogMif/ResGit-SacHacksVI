@@ -29,9 +29,7 @@ class Screen:
         button.grid(row=row, column=col, padx=10, pady=5, sticky="w")
 
     def add_frame(self):
-        screen_width = self._screen.winfo_screenwidth()
-        half_width = screen_width // 2
-        left_panel = tk.Frame(self._screen, width=half_width, height=300, bg="lightgray")
+        left_panel = tk.Frame(self._screen, width=400, height=300, bg="lightgray")
 
         left_panel.grid(row=1, column=0, columnspan=2, padx=10, pady=5, sticky="w")
 
