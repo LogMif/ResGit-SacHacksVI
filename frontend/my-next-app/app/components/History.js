@@ -4,46 +4,6 @@ import {useEffect, useState} from "react";
 import Cookies from "js-cookie";
 import {decryptData} from "@/app/config";
 
-// Sample JSON Data
-const initialJson = {
-    "user info": {
-        "name": "testName",
-        "email": "testemail@gmail.com",
-        "linkedin url": "https://www.linkedin.com/in/kierann-chong",
-        "personal url": "https://green-kiwie.github.io/Kierann_Resume.github.io",
-        "contact_number": "(949) 822-4004"
-    },
-    "education": {
-        "school 1 (university name)": {
-            "location (city/country)": "California",
-            "degree": "BSc in Computer Science",
-            "year status": "Sophomore",
-            "expected graduation": "May 2027"
-        }
-    },
-    "technical skills": {
-        "skill category 1 (languages)": ["Python", "Pandas", "Tensorflow", "Gensim"],
-        "skill category 2 (tools)": ["AWS", "Git", "PowerApps"]
-    },
-    "experiences": {
-        "arc 1 (job title)": {
-            "company": "Google",
-            "job dates": "July 2024 - September 2024",
-            "perspectives": {
-                "perspective 1": ["Bullet 1", "Bullet 2"],
-                "perspective 2": ["Bullet 1", "Bullet 2"]
-            }
-        }
-    },
-    "awards": {
-        "award 1 (award title)": {
-            "institution": "UC Irvine, California",
-            "award date": "2024-2025",
-            "award description": ["Awarded for research"]
-        }
-    }
-};
-
 // **Utility Function: Deep Clone Object**
 const deepClone = (obj) => JSON.parse(JSON.stringify(obj));
 
@@ -171,6 +131,9 @@ export default function JsonEditor() {
         }
     }, [userSession]);
 
+    const [jsonData, setJsonData] = useState('');
+
+
     async function sendResumeRequest() {
         try {
             if (!userSession) {
@@ -192,15 +155,14 @@ export default function JsonEditor() {
                 throw new Error(`Error: ${res.status}`);
             }
 
-            const data = await res.json();
-            setResponse(data);
+            const data = await res.json()
+            setResponse(JSON.parse(data["data"]["body"])["history"]);
+            setJsonData(JSON.parse(data["data"]["body"])["history"]);
         } catch (err) {
             console.error("Error:", err.message);
             setError(err.message);
         }
     }
-
-    const [jsonData, setJsonData] = useState(initialJson);
 
     // Function to save JSON
     const saveJson = () => {
@@ -217,9 +179,6 @@ export default function JsonEditor() {
 
     return (
         <div className="max-w-screen-lg w-full mx-auto p-6 bg-white shadow-md rounded-lg">
-            {response && <pre className="mt-4 p-3 bg-gray-200 rounded-lg">{JSON.stringify(response, null, 2)}</pre>}
-            {error && <p className="text-red-500">{error}</p>}
-
             <h2 className="text-2xl font-bold mb-4 text-center">Editable JSON Viewer</h2>
 
             {/* Editable JSON Viewer */}

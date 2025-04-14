@@ -5,6 +5,7 @@ import Link from "next/link";
 import MainResumeViewComponent from "@/app/components/MainResumeViewComponent";
 import SidebarComponent from "@/app/components/SidebarComponent";
 import NavComponent from "@/app/components/NavComponent";
+import UploadResumeComponent from "@/app/components/UploadResumeComponent"
 import { decryptData } from "../config";
 import Cookies from "js-cookie";
 
@@ -112,10 +113,7 @@ export default function ResumeView() {
                     </div>
                 ) : (
                     <div className="resume-layout-1-column">
-                        <MainResumeViewComponent
-                            selectedResume={selectedResume}
-                            generateNew={generateNew}
-                            onShowHistory={showHistory}
+                        <UploadResumeComponent
                         />
                     </div>
                 )}
