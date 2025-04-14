@@ -31,5 +31,9 @@ def get_user_history(username: str, password: str) -> dict:
     directory = _get_local_data_storage_directory()
     return _invoke_api(rgapi.get_user_history, {"bucket": directory, "username": username, "password": password})
     
+def add_user_history(username: str, password: str, pdf_binary: bytes) -> None:
+    """updates user history based on pdf file passed in as bytes/binary"""
+    directory = _get_local_data_storage_directory()
+    _invoke_api(rgapi.add_user_history, {"bucket": directory, "pdf_binary": pdf_binary, "username": username, "password": str})
 
 

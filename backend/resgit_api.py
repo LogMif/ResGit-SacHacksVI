@@ -21,7 +21,7 @@ def get_data_storage(data_storage: str) -> ModuleType:
     elif data_storage == 'local':
         return localfs
 
-def add_user_history(bucket: str, pdf_binary: dict, username: str, password: str, data_storage: str = 's3') -> dict:
+def add_user_history(bucket: str, pdf_binary: bytes, username: str, password: str, data_storage: str = 's3') -> dict:
     pdf_text = pdf_reader.extract_text_from_pdf(pdf_binary)
     generated_dict = dp.parse_pdf_text_to_history(pdf_text)
     try:
