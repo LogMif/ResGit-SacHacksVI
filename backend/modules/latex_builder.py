@@ -1,6 +1,6 @@
 import os
 import subprocess
-import history_class
+from . import history_class
 
 
 def _get_contact_information(user_info: history_class.user_info) -> str:

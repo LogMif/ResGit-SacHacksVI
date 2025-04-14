@@ -26,9 +26,9 @@ def password_filename() -> str:
     """returns the filename of the password file"""
     return 'passwds.auth'
 
-def _get_path(directory: str, file_name:str) -> Path:
+def _get_path(input_directory: str, input_file_name:str) -> Path:
     """returns a path object given the directory and filename"""
-    return Path(directory+'/'+file_name)
+    return Path(input_directory+'/'+input_file_name)
 
 def _get_object(directory: str, file_name: str) -> dict[str, str] | None:
     """
@@ -59,7 +59,7 @@ def _get_auth_pairs(directory: str) -> 'json':
     password_response = _get_object(directory, password_filename())
 
     if password_response is None:
-        _put_object(directory = directory, file_name = password_filename, Body = '{}')
+        _put_object(directory = directory, file_name = password_filename(), file_data = '{}')
         password_response = _get_object(directory, password_filename())
 
     return password_response
@@ -91,7 +91,7 @@ def create_user(directory: str, user_name: str, password: str) -> None:
     json_auth_pairs = json.dumps(auth_pairs)
 
     _create_directory(user_name)
-    _put_object(directory = directory, filename = f'passwds.auth', Body = json_auth_pairs)
+    _put_object(directory = directory, file_name = f'passwds.auth', file_data = json_auth_pairs)
 
 def get_history(directory: str, user_name: str, password: str) -> dict[str, 'perspectives']:
     """
