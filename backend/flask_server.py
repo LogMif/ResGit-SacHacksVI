@@ -18,6 +18,8 @@ def flask_add_to_history() -> dict[str, int | str]:
     pdf_binary = data.get("pdf_binary", "")
     username = data.get("username", "")
     password = data.get("password", "")
+    print(data)
+    print(pdf_binary)
 
     return rg.add_user_history(pdf_binary, username, password)
 

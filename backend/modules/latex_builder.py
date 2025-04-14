@@ -1,6 +1,6 @@
 import os
 import subprocess
-from modules import history_class
+import history_class
 
 
 def _get_contact_information(user_info: history_class.user_info) -> str:
@@ -193,110 +193,54 @@ def get_resume(history: history_class.history) -> bytes:
 
 if __name__ == "__main__":
     history_template = {
-        "user info": {
-            "name": "testName",
-            "email": "testemail@gmail.com",
-            "address": "12345 Street Name, City, State",
-            'linkedin url': 'wow',
-            'personal url': 'its personal',
-            "contact_number": "1234567891"
-        },
-        "education": {
-            "school 1": {
-                'location (city/country)': 'Cali',
-                "dates": "September 2024, June 2026",
-                'degree': 'BS in BSing',
-                'year status': 'Junior',
-                'expected graduation': '203000',
-                "major": "Computer Science, BS"
+    "user_info":{
+
+    },
+    "education": {
+        "UC I": {
+            "location (city/country)": "US",
+            "degree": "BSc in stupidify",
+            "year status": "freshjuice",
+            "expected graduation": "June 2020"
+        }
+    },
+    "technical skills": {
+        "interpersonal": ["kindness", "empathetic", "pathetic"],
+        "hard skills": ["excel", "powerpoint"]
+    },
+    "experiences": {
+        "microsfot server": {
+            "company": "microsoft",
+            "job dates": "insert fake dates here",
+            "perspectives": {
+                "my first idea": ["hehe", "haha"],
+                "second idea": ["sad", "sadly"]
             }
         },
-        "technical skills": {
-            "skill 1": "Such a good programmer",
-            "skill 2": "The stupid API back-end made didn't accept POST :)"
-        },
-        "experiences": {
-            "arc 1": {
-                'company': 'Mario',
-                'job dates': '2010-2020',
-                'perspectives': {
-                    "perspective": ["bullet 1", "bullet 2"],
-                    "perspective 2": ["bullet 1", "bullet 2"]
-                }
-            },
-            "arc 2": {
-                'company': 'Luigi',
-                'job dates': '2020-2023',
-                'perspectives': {
-                    "perspective": ["bullet 1", "bullet 2"],
-                    "perspective 2": ["bullet 1", "bullet 2"],
-                }
+        "google clown": {
+            "company": "clown inc",
+            "job dates": "whoop",
+            "perspectives": {
+                "happy": ["hah", "hoho"],
+                "sad": ["womp womp", "woomp"]
             }
         }
-    }
-
-    history_template2 = {
-        "user info": {
-            "name": "pft",
-            "email": "pft@gmail.com",
-            "linkedin url": "hhehe love linkedin",
-            "personal url": "github nerds",
-            "contact_number": "insert pphone numbers here"
+    },
+    "awards": {
+        "best person award": {
+            "institution": "white house",
+            "award date": "2003",
+            "award description": ["Voted most loved person ever"]
         },
-        "education": {
-            "UC I": {
-                "location (city/country)": "US",
-                "degree": "BSc in stupidify",
-                "year status": "freshjuice",
-                "expected graduation": "June 2020"
-            }
-        },
-        "technical skills": {
-            "interpersonnel": ["kindness", "empathatic", "pathetic"],
-            "hard skills": ["excel", "powerpoint"]
-        },
-        "experiences": {
-            "microsfot server": {
-                "company": "microsoft",
-                "job dates": "insert fake dates here",
-                "perspectives": {
-                    "my first idea": ["hehe", "haha"],
-                    "second idea": ["sad", "sadly"],
-                }
-            },
-            "arc 2": {
-                "company": "clown inc",
-                "job dates": "whoop",
-                "perspectives": {
-                    "happy": ["hah", "hoho"],
-                    "sad": ["womp womp", "woomp"],
-                }
-            }
-        },
-        "awards":{
-            "best person award": {
-                "institution": "white house",
-                "award date": "2003",
-                "award description": [
-                    "Voted most loved person ever"
-                ]
-            },
-            "stupidest person award": {
-                "institution": "fund house",
-                "award date": "2100",
-                "award description": [
-                    "lost the company 10 trillion"
-                ]
-            }
+        "stupidest person award": {
+            "institution": "fund house",
+            "award date": "2100",
+            "award description": ["lost the company 10 trillion"]
         }
     }
+};
 
-    history1 = history_class.history(history_template)
-    history2 = history_class.history(history_template2)
-
-    history1.merge_histories(history2)
-
-    get_resume(history1)
+    get_resume(history_class.history(history_template))
     # print(history1.jsonify())
 
 

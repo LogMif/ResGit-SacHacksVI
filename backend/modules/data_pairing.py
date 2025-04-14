@@ -158,7 +158,7 @@ def get_history_recommendation(job_summary: str, history: dict) -> list[(str, st
     prompt = f'''
             You are given a dictionary of items to pick to add to a resume. 
             The resume must be tailored to the job and you are to highlight the most important items to pick from the dictionary. 
-            Be as succinct as possible. 
+            Be as succinct as possible and print in prose. Do not send in markdown. Just plaintext will do. 
             Here is the job summary: {job_summary}
             Here is the dictionary: {history}'''
 
