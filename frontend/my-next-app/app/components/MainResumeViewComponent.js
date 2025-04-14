@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import PDFViewComponent from "@/app/components/PDFViewComponent";
 import GenerateResumeComponent from "@/app/components/GenerateResumeComponent";
 import History from "@/app/components/History";
@@ -8,7 +7,7 @@ import History from "@/app/components/History";
 export default function MainResumeViewComponent({ selectedResume, generateNew, onShowHistory }) {
     return (
         <div className="flex w-full h-full columns-2">
-            <div className="flex-1 bg-white p-8 h-full">
+            <div className="flex-1 bg-white pt-8 h-full">
                 {generateNew ? (
                     <GenerateResumeComponent />
                 ) : selectedResume ? (
