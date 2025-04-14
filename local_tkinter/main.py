@@ -35,15 +35,11 @@ class Screen:
 
         left_panel.grid(row=1, column=0, columnspan=2, padx=10, pady=5, sticky="w")
 
-    def _add_button(self, text: str, command, side: str, anchor: str, padx: tuple[int, int] = (0, 0)) -> None:
-        """Adds a button to the screen with specified text and command."""
-        button = ttk.Button(self._screen, text=text, command=command)
-        button.pack(side=side, anchor=anchor, padx=padx)
 
     def add_name_label(self, row, col) -> None:
         """adds label for username input"""
         self._add_label(row, col, "Username: ", "left", "nw", (0, 10))
-    
+
     def add_password_label(self, row, col) -> None:
         """adds label for password"""
         self._add_label(row, col, "Password: ", "left", "nw", (0, 10))
@@ -56,7 +52,7 @@ class Screen:
 
     def add_login_button(self, username: tk.StringVar, password: tk.StringVar, row, col) -> None:
         """adds a button to create a user"""
-        btn = self._add_button(row, col, "Create User", lambda: self.print_input(username.get(), password.get()), side="left", anchor="nw", padx=(10, 0))
+        btn = self._add_button(row, col, "Create User", lambda: backend.create_user(username.get(), password.get()), side="left", anchor="nw", padx=(10, 0))
 
 
 
