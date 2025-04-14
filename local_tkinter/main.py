@@ -21,7 +21,7 @@ def main() -> None:
     login_button = screen.add_button(screen.populate_text, output_box, username, password, row=0, col=4, parent=screen._screen)
     create_button = screen.add_button(screen.create_user, username, password, row=0, col=5, parent=screen._screen, text="Create User")
 
-    import_resume_button = screen.add_button(screen.create_user, username, password, row=2, col=2, parent=screen._screen, text="Import Resume")
+    import_resume_button = screen.add_button(screen.import_resume, username, password, row=2, col=2, parent=screen._screen, text="Import Resume")
 
 
 
