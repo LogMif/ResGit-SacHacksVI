@@ -1,0 +1,24 @@
+
+from backend import resgit_api as rgapi
+from typing import Callable
+
+def _get_local_data_storage_directory() -> str:
+    return "local_tkinter_data"
+
+def _invoke_api(function: callable, kwargs: dict) -> any:
+    """invokes api function my modifies data_storage parameter"""
+    kwargs["data_storage"] = 'local'
+    return function(**kwargs)
+
+def create_user(username: str, password: str) -> None:
+    """creates user. throws 'UserAlreadyExistsError' error if username already exists"""
+    directory = _get_local_data_storage_directory()
+    _invoke_api(rgapi.add_user, {"bucket": directory, "username": username, "password": password})
+
+def get_user_history(username: str, password: str) -> dict:
+    """gets all the user history as a dict"""
+    directory = _get_local_data_storage_directory()
+    return _invoke_api(rgapi.get_user_history, {"bucket": directory, "username": username, "password": password})
+    
+
+
