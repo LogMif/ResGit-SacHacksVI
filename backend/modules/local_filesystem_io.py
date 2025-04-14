@@ -26,17 +26,6 @@ def password_filename() -> str:
     """returns the filename of the password file"""
     return 'passwds.auth'
 
-# class S3Client:
-#     def __init__ (self):
-#         self._client = boto3.client('s3')
-
-    
-#     def __enter__(self):
-#         return self._client
-
-
-#     def __exit__(self, exc_type, exc_value, exc_traceback):
-#         self._client.close()
 def _get_path(directory: str, file_name:str) -> Path:
     """returns a path object given the directory and filename"""
     return Path(directory+'/'+file_name)
