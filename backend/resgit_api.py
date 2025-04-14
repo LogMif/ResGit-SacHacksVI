@@ -30,8 +30,7 @@ def add_user_history(bucket: str, pdf_binary: bytes, username: str, password: st
     except:
         user_history = history_class.history(generated_dict)
     user_history_str = user_history.jsonify()
-    history_dict = json.loads(user_history_str)
-    get_data_storage(data_storage).create_history(bucket, username, password, history_dict)
+    get_data_storage(data_storage).create_history(bucket, username, password, user_history_str)
     return {"history": user_history_str}
     
 def get_ai_recommendation(bucket: str, job_link: str, username: str, password: str, data_storage: str = 's3') -> dict:
@@ -64,9 +63,9 @@ def get_user_history(bucket: str, username: str, password: str, data_storage: st
     current_history = get_data_storage(data_storage).get_history(bucket, username, password)
     return {"history": current_history}
 
-def generate_resume(bucket: str, selected_history: str, username: str, password: str, resume_name: str, data_storage: str = 's3') -> dict:
+def generate_resume(bucket: str, selected_history: dict, username: str, password: str, resume_name: str, data_storage: str = 's3') -> dict:
     hist = history_class.history(selected_history)
-    generated_resume_binary = lb.get_resume(hist)
+    generated_resume_binary = lb.get_resume(hist, resume_name)
 
     encoded_binary = base64.b64encode(generated_resume_binary).decode("utf-8")
     get_data_storage(data_storage).store_generated_resume(bucket, username, password, resume_name, generated_resume_binary)

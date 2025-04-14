@@ -154,14 +154,14 @@ def _get_awards(awards: list[history_class.awards]) -> str:
     output += f"""\\end{{description}}"""
     return output
 
-def _compile_latex(latex_code: str) -> None:
-    latex_filename = "resume.tex"
+def _compile_latex(latex_code: str, resume_no_ext: str) -> None:
+    latex_filename = f"{resume_no_ext}.tex"
     with open(latex_filename, "w", encoding="utf-8") as f:
         f.write(latex_code)
 
     subprocess.run(["pdflatex", "-interaction=nonstopmode", latex_filename])
 
-def _generate_resume(history: history_class.history) -> None:
+def _generate_resume(history: history_class.history, resume_no_ext: str = "resume") -> None:
     """generates all resumes"""
     latex_code = ""
     latex_code += _get_preamble() 
@@ -170,21 +170,27 @@ def _generate_resume(history: history_class.history) -> None:
     latex_code += _get_technical_skills(history.technical_skills())
     latex_code += _get_work_experience(history.experiences())
     latex_code += _get_awards(history.awards())
-
     latex_code += _get_postamble()
-    _compile_latex(latex_code)
 
-def _remove_latex_files() -> None:
-    files_to_delete = ["resume.tex", "resume.aux", "resume.fdb_latexmk", "resume.fls", "resume.log", "resume.out"]
+    latex_code = latex_code.replace('%', '\\%')
+    
+    print(latex_code)
+    # latex_code.replace('_', '\_')
+
+    _compile_latex(latex_code, resume_no_ext)
+
+def _remove_latex_files(resume_no_ext: str = "resume") -> None:
+    files_to_delete = [f"{resume_no_ext}.tex", f"{resume_no_ext}.aux", f"{resume_no_ext}.fdb_latexmk", f"{resume_no_ext}.fls", f"{resume_no_ext}.log", f"{resume_no_ext}.out"]
     
     for file in files_to_delete:
         if os.path.exists(file):
             os.remove(file)
 
-def get_resume(history: history_class.history) -> bytes:
-    _generate_resume(history)
+def get_resume(history: history_class.history, resume_name: str) -> bytes:
+    resume_no_ext = resume_name[:-4]
+    _generate_resume(history, resume_no_ext)
 
-    with open("resume.pdf", "rb") as pdf_file:
+    with open(resume_name, "rb") as pdf_file:
         binary_data = pdf_file.read()
 
     _remove_latex_files()

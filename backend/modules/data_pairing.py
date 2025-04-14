@@ -1,6 +1,7 @@
 import boto3
 import os
 import dotenv
+import json
 from modules import job_scrapper
 from modules.history_class import history
 
@@ -23,8 +24,10 @@ def parse_pdf_text_to_history(pdf_text: str) -> dict:
     "user info": {
         "name": "testName",
         "email": "testemail@gmail.com",
+        "linkedin url": "some linkedin url",
+        "personal url": "",
         "address": "12345 Street Name, City, State",
-        "phone": "1234567891"
+        "contact_number": "1234567891"
     },
     "education": {
         "school 1": {
@@ -38,12 +41,10 @@ def parse_pdf_text_to_history(pdf_text: str) -> dict:
     },
     "experiences": {
         "arc 1": {
-            "perspective": ["bullet 1", "bullet 2"],
-            "perspective 2": ["bullet 1", "bullet 2"],
+            "perspective 1": ["bullet 1", "bullet 2"]
         },
         "arc 2": {
-            "perspective": ["bullet 1", "bullet 2"],
-            "perspective 2": ["bullet 1", "bullet 2"],
+            "perspective 1": ["bullet 1", "bullet 2"]
         }
     }
 }
@@ -54,10 +55,11 @@ def parse_pdf_text_to_history(pdf_text: str) -> dict:
         "email": "pft@gmail.com",
         "linkedin url": "hhehe love linkedin",
         "personal url": "github nerds",
+        "address": "",
         "contact_number": "insert pphone numbers here"
     },
     "education": {
-        "UC I": {
+        "UCI": {
             "location (city/country)": "US",
             "degree": "BSc in stupidify",
             "year status": "freshjuice",
@@ -73,16 +75,15 @@ def parse_pdf_text_to_history(pdf_text: str) -> dict:
             "company": "microsoft",
             "job dates": "insert fake dates here",
             "perspectives": {
-                "my first idea": ["hehe", "haha"],
-                "second idea": ["sad", "sadly"],
+                "perspective 1": ["This is one line", "haha"]
             }
         },
         "google clown": {
             "company": "clown inc",
             "job dates": "whoop",
             "perspectives": {
-                "happy": ["hah", "hoho"],
-                "sad": ["womp womp", "woomp"],
+                "perspective 1": ["a perspective is a description. There should be no need for the second perspective", "hoho"],
+                "perspective 2": ["this perspective is optional", "hoho"],
             }
         }
     },
@@ -106,6 +107,8 @@ def parse_pdf_text_to_history(pdf_text: str) -> dict:
     prompt = f'''
             Here is a template: {history_template}
             Here is another sample of the same template: {history_template2}
+            Follow the template for keys of dictionary exactly. If the key exists in the dictionary, it must exist in the output and if data does not exist in the resume, just add empty string to the value in the dictionary. 
+            The exception to the rule is perspectives where the second perspective in the perspective dictionary is optional. 
             \n\n
             This template is to be filled out with the following text that represents a resume,
             putting the data from that text into the approriate sections of the dictionary template.
@@ -136,8 +139,12 @@ def parse_pdf_text_to_history(pdf_text: str) -> dict:
     )
 
     generated_text = ai_response['output']['message']['content'][0]['text']
+    start = generated_text.find('{')
+    end = generated_text.rfind('}')+1
+    generated_dict_as_str = generated_text[start:end].replace("'", '"')
+    print(generated_dict_as_str)
+    return json.loads(generated_dict_as_str)
 
-    return generated_text
 
 
 

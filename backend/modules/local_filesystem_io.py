@@ -42,10 +42,10 @@ def _get_object(directory: str, file_name: str) -> dict[str, str] | None:
     except:
         return None
     
-def _put_object(directory: str, file_name: str, file_data: str) -> None:
+def _put_object(directory: str, file_name: str, file_data: str, mode: str = 'w') -> None:
     """creates a file of specific file name in given directory"""
     file_path = _get_path(directory, file_name)
-    with open(file_path, 'w') as file:
+    with open(file_path, mode) as file:
         file.write(file_data)
 
 def _create_directory(directory) -> None:
@@ -150,7 +150,7 @@ def store_generated_resume(directory: str, user_name: str, password: str, resume
     Stores the given resume for the given user.
     """
     auth_user(directory, user_name, password)
-    _put_object(directory = directory, file_name = f'{user_name}/{resume_name}.pdf', file_data = generated_resume)
+    _put_object(directory = directory, file_name = f'{user_name}/{resume_name}.pdf', file_data = generated_resume, mode = 'wb')
 
 
 
