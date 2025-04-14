@@ -35,10 +35,10 @@ class Screen:
 
         left_panel.grid(row=1, column=0, columnspan=2, padx=10, pady=5, sticky="w")
 
-    def _add_button(self, text: str, command, side: str, anchor: str, padx: tuple[int, int] = (0, 0)) -> None:
+    def _add_button(self, row, col, text: str, command, side: str, anchor: str, padx: tuple[int, int] = (0, 0)) -> None:
         """Adds a button to the screen with specified text and command."""
         button = ttk.Button(self._screen, text=text, command=command)
-        button.pack(side=side, anchor=anchor, padx=padx)
+        button.grid(row=row, column=col, padx=10, pady=5, sticky="w")
 
     def add_name_label(self, row, col) -> None:
         """adds label for username input"""
