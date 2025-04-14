@@ -1,8 +1,6 @@
 import json
-import traceback
 import dotenv
-import os
-from flask import jsonify
+
 from modules import s3_io as s3
 from modules import local_filesystem_io as localfs
 from modules import history_class
@@ -12,12 +10,12 @@ from modules import job_scrapper
 from modules import pdf_reader
 import base64
 
-from typing import module
+from types import ModuleType
 
 
 dotenv.load_dotenv()
 
-def get_data_storage(data_storage: str) -> module:
+def get_data_storage(data_storage: str) -> ModuleType:
     if data_storage == 's3':
         return s3
     elif data_storage == 'local':
