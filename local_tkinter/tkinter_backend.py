@@ -10,8 +10,6 @@ os.chdir(original_dir)
 from typing import Callable
 
 
-
-
 def _get_local_data_storage_directory() -> str:
     return "local_tkinter_data"
 
@@ -34,6 +32,4 @@ def get_user_history(username: str, password: str) -> dict:
 def add_user_history(username: str, password: str, pdf_binary: bytes) -> None:
     """updates user history based on pdf file passed in as bytes/binary"""
     directory = _get_local_data_storage_directory()
-    _invoke_api(rgapi.add_user_history, {"bucket": directory, "pdf_binary": pdf_binary, "username": username, "password": str})
-
-
+    _invoke_api(rgapi.add_user_history, {"bucket": directory, "pdf_binary": pdf_binary, "username": username, "password": password})

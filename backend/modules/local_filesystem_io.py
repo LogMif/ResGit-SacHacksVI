@@ -90,7 +90,7 @@ def create_user(directory: str, user_name: str, password: str) -> None:
 
     json_auth_pairs = json.dumps(auth_pairs)
 
-    _create_directory(user_name)
+    _create_directory(directory + '/'+ user_name)
     _put_object(directory = directory, file_name = f'passwds.auth', file_data = json_auth_pairs)
 
 def get_history(directory: str, user_name: str, password: str) -> dict[str, 'perspectives']:
