@@ -1,5 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import filedialog
+
+from pathlib import Path
+
 import tkinter_backend as backend
 
 class Screen:
@@ -23,9 +27,9 @@ class Screen:
         entry = ttk.Entry(self._screen, width=width, textvariable=stringvar, show=show)
         entry.grid(row=row, column=col, padx=10, pady=5, sticky="w")
 
-    def _add_button(self, row, col, text: str, command, side: str, anchor: str, padx: tuple[int, int] = (0, 0)) -> None:
+    def _add_button(self, parent, row, col, text: str, command, side: str, anchor: str, padx: tuple[int, int] = (0, 0)) -> None:
         """Adds a button to the screen with specified text and command."""
-        button = ttk.Button(self._screen, text=text, command=command)
+        button = ttk.Button(parent, text=text, command=command)
         button.grid(row=row, column=col, padx=10, pady=5, sticky="w")
 
     def add_text(self, parent, row: int, col: int, width: int = 40, height: int = 5, sticky: str = "w", padx: tuple[int, int] = (0, 0)) -> tk.Text:
@@ -35,12 +39,12 @@ class Screen:
         return text_widget
 
 
-    def add_frame(self):
-        left_panel = tk.Frame(self._screen, width=400, height=300, bg="lightgray")
+    def add_frame(self, *args, row, col, colspan, width, height):
+        panel = tk.Frame(self._screen, width=width, height=height, bg="lightgray")
 
-        left_panel.grid(row=1, column=0, columnspan=3, padx=10, pady=5, sticky="w")
-        left_panel.grid_propagate(False)
-        return left_panel
+        panel.grid(row=row, column=col, columnspan=colspan, padx=10, pady=5, sticky="w")
+        panel.grid_propagate(False)
+        return panel
 
 
     def add_name_label(self, row, col) -> None:
@@ -57,18 +61,34 @@ class Screen:
             self._add_input(row, col, width = 15, stringvar=var, side = "left", anchor="nw", show=show)
             return var
 
-    def add_button(self, function, *args, row, col, text: str = "Login") -> None:
+    def add_button(self, function, *args, parent, row, col, text: str = "Login") -> None:
         """adds a button to create a user"""
-        btn = self._add_button(row, col, text, lambda: function(*args), side="left", anchor="nw", padx=(10, 0))
+        btn = self._add_button(parent, row, col, text, lambda: function(*args), side="left", anchor="nw", padx=(10, 0))
 
-    def _create_user(self, username, password) -> None:
+    def create_user(self, username, password) -> None:
         backend.create_user(username.get(), password.get())
 
-    def _populate_text(self, text_field, username: tk.StringVar, password: tk.StringVar) -> None:
+    def populate_text(self, text_field, username: tk.StringVar, password: tk.StringVar) -> None:
 #         backend.create_user(username.get(), password.get()
           text_field.insert("end", backend.get_user_history(username.get(), password.get()))
 
+    def import_resume(self, username: tk.StringVar, password: tk.StringVar) -> None:
+        resume_filepath = _file_selector('*pdf')
+        with open(resume_filepath, 'rb') as file:
+            resume_binary = file.read()
+        
+        backend.add_user_history(username.get(), password.get(), resume_binary)
 
+    
     def mainloop(self) -> None:
         """runs the screen mainloop"""
         self._screen.mainloop()
+
+def _file_selector(filetype: str) -> Path:
+        """opens file selector dialogue and returns the filepath. possible filetypes: '*txt', '*pdf' """
+        file_path = filedialog.askopenfilename(
+             title = "Select a resume pdf",
+             filetypes=[("PDF files", filetype)]
+        )
+        return Path(file_path)
+    
