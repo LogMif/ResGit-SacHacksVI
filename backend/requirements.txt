@@ -7,3 +7,4 @@ selenium
 pyPDF2
 boto3
 pylatex
+screeninfo

@@ -41,6 +41,14 @@ class user_info:
         output["personal url"] = self.personal_url()
         output["contact_number"] = self.contact_number()
         return output
+    
+    def __repr__(self) -> str:
+        string = self.name()
+        string += "\n email: " + self.email()
+        string += "\n linkedin: " + self.linkedin_url()
+        string += "\n personal url: " + self.personal_url()
+        string += "\n contact number: " + self.contact_number()
+        return string
 
 class education:
     def __init__(self, education_dict: dict, university_name: str):
@@ -103,6 +111,15 @@ class education:
         except:
             pass
         return output
+    
+    def __repr__(self) -> str:
+        string = self.location()
+        string += "\n degree: " + str(self.degree())
+        string += "\n year: " + str(self.year_status())
+        string += "\n expected graudation: " + str(self.expected_graduation())
+        string += "\n gpa: " + str(self.gpa())
+        return string
+    
 
 class skills:
     def __init__(self, skills_list: list, skill_category: str):
@@ -124,8 +141,15 @@ class skills:
     
     def jsonify(self):
         return self.skills_list()
+    
+    def __repr__(self) -> str:
+        string = self._skill_category + ": "
+        for s in self.skills_list():
+            string += '\n\t' + str(s) 
+        return string
 
 class perspective:
+
     def __init__(self, perspective_name: str, perspective_bullets: list[str]):
         try:
             self._perspective_name = perspective_name
@@ -139,6 +163,12 @@ class perspective:
     
     def perspective_bullets(self) -> list[str]:
         return self._perspective_bullets
+    
+    def __repr__(self):
+        string = self.perspective_name()
+        for b in self.perspective_bullets():
+            string += '\n\t' + str(b)
+        return string
 
 class experiences:
     def __init__(self, experience_dict: dict, job_title: str):
@@ -176,6 +206,18 @@ class experiences:
         output["perspectives"] = {x.perspective_name(): x.perspective_bullets() for x in self.perspectives()}
 
         return output
+    
+    def __len__(self) -> int:   
+        return len(self._perspectives)
+    
+    def __getitem__(self, index: int) -> perspective:
+        return self._perspectives[index]
+    
+    def __repr__(self) -> str:
+        string = "Job title: " + str(self.job_title()) + '\n'
+        string += "Company: " + str(self.company()) + '\n'
+        string += "Dates: " + str(self.job_dates())
+        return string
 
 class awards:
     def __init__(self, award_dict: dict, award_title: str):
@@ -209,8 +251,80 @@ class awards:
         output["award date"] = self.award_date()
         output["award description"] = self.award_description()
         return output
+    
+
+class history_iter():
+    def __init__(self, hist):
+        self.last_returned = None
+        self.history = hist
+        self._list_iter = 0
+        self._list_iter_2 = 0
+        self._list_iter_2_main_flag = False
+
+    def __iter__(self):
+        return self
+
+    def _one_level_iter(self, record: any, record_name: str, button_padding: tuple[int, int] = (10, 5)) -> str:
+        """template for one level iteration used for most records"""
+        if (len(record)-1 == self._list_iter):
+            self.last_returned = record_name
+            self._list_iter = 0
+            self._list_iter_2_main_flag = False
+            return record[-1], button_padding
+        else:
+            self._list_iter += 1
+            return record[self._list_iter-1], button_padding
+        
+    def _two_level_iter(self, record: any, temp_record_name: str, record_name: str, button_padding: tuple[int, int] = (10, 5)) -> str:
+        """template for two level deep iteration"""
+        indent_padding = (25, 5)
+        if self._list_iter_2_main_flag == False:
+            self._list_iter_2_main_flag = True
+            return record[self._list_iter], button_padding
+        elif (len(record)-1 == self._list_iter_2):
+            if (len(record[self._list_iter_2-1]) == self._list_iter):
+                self._list_iter_2 = 0
+            return self._one_level_iter(record[-1], record_name, indent_padding)
+        else:
+            if (self._list_iter == 0):
+                self._list_iter_2 += 1
+            return self._one_level_iter(record[self._list_iter_2-1], temp_record_name, indent_padding)
+    
+    def _iterate_education(self) -> str:
+        """for iterating through every education record """
+        return self._one_level_iter(self.history.education(), "education")
+    
+    def _iterate_technical_skills(self) -> str:
+        """for iterating through every technical skill record"""
+        return self._one_level_iter(self.history.technical_skills(), "technical skills")
+
+    def _iterate_experiences(self) -> str:
+        """for iterating through every experiences record"""
+        return self._two_level_iter(self.history.experiences(), "technical skills", "experiences")
+
+    def __next__(self):
+        if (self.last_returned == None):
+            self.last_returned = "user info"
+            return self.history.user_info(), (0, 0)
+        
+        elif (self.last_returned == "user info"):
+            return self._iterate_education()
+            
+        elif (self.last_returned =="education"):
+            return self._iterate_technical_skills()
+
+        elif (self.last_returned == "technical skills"):
+           return self._iterate_experiences()
+
+        elif (self.last_returned == "experiences"):
+            self.last_returned = "award"
+            return self.history.awards(), (0, 0)
+
+        else:
+            raise StopIteration
 
 class history:
+
     def __init__(self, history_raw_dict: dict):
         if 'user info' in history_raw_dict:
             self._user_info = user_info(history_raw_dict["user info"])
@@ -230,6 +344,12 @@ class history:
         self._awards = [awards(award_dict, award_title) \
                     for award_title, award_dict in \
                         history_raw_dict["awards"].items()]
+        
+    # def __str__(self):
+    #     return "hi"
+
+    def __iter__(self) -> history_iter:
+        return history_iter(self)
         
     def education(self) -> list[education]:
         return self._education
@@ -316,3 +436,6 @@ class history:
             output["awards"] = {}
 
         return output
+    
+
+

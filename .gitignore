@@ -1,13 +1,8 @@
-/backend/.env
-/backend/venv
-/venv
-/backend/__pycache__
-/backend/resume.pdf
-/backend/modules/resume.pdf
-/backend/modules/__pycache__
+backend/venv/
+backend/.env
+backend/modules/__pycache__/
+backend/__pycache__/
 
-/local_tkinter/__pycache__
-/local_tkinter/local_tkinter_data/
+local_tkinter/__pycache__/
+local_tkinter/local_tkinter_data/
 
-
-/frontend/.idea
